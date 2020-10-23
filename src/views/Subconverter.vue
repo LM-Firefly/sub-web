@@ -645,7 +645,7 @@ export default {
         fdn: false,
         appendType: false,
         insert: false, // 是否插入默认订阅的节点，对应配置项 insert_url
-        expand: true, // 是否展开规则
+        expand: false, // 是否展开规则
 
         // tpl 定制功能
         tpl: {

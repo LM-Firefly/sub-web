@@ -127,8 +127,8 @@
                     <el-popover placement="bottom" v-model="form.extraset">
                       <el-row>
                         <el-checkbox
-                          v-model="form.new_name"
-                          label="Clash New Field"
+                          v-model="form.expand"
+                          label="展开规则"
                         ></el-checkbox>
                       </el-row>
                       <el-row>
@@ -153,6 +153,18 @@
                         <el-checkbox
                           v-model="form.fdn"
                           label="过滤非法节点"
+                        ></el-checkbox>
+                      </el-row>
+                      <el-row>
+                        <el-checkbox
+                          v-model="form.tfo"
+                          label="TCP Fast Open"
+                        ></el-checkbox>
+                      </el-row>
+                      <el-row>
+                        <el-checkbox
+                          v-model="form.scv"
+                          label="Skip Cert Verify"
                         ></el-checkbox>
                       </el-row>
                       <el-button slot="reference">更多选项</el-button>
@@ -809,7 +821,9 @@ export default {
           "&fdn=" +
           this.form.fdn.toString() +
           "&sort=" +
-          this.form.sort.toString();
+          this.form.sort.toString() +
+          "&expand=" +
+          this.form.expand.toString();
 
         if (this.form.tpl.surge.doh === true) {
           this.customSubUrl += "&surge.doh=true";
