@@ -353,19 +353,11 @@ export default {
         },
         customBackend: {
           "localhost:25500 本地版": "http://localhost:25500/sub?",
-          "sub-beta.now.sh (自动编译最新版本后端-测试）":
-            "https://sub-beta.now.sh/sub?",
-          "subcon.dlj.tf(subconverter作者提供-稳定)":
-            "https://subcon.dlj.tf/sub?",
-          "api.dler.io(sub作者&lhie1提供-稳定)": "https://api.dler.io/sub?",
-          "api.wcc.best(sub-web作者提供-稳定)": "https://api.wcc.best/sub?",
+          "firefly-sub.herokuapp.com": "https://firefly-sub.herokuapp.com/sub?",
         },
         backendOptions: [
           { value: "http://localhost:25500/sub?" },
-          { value: "https://sub-beta.now.sh/sub?" },
-          { value: "https://subcon.dlj.tf/sub?" },
-          { value: "https://api.dler.io/sub?" },
-          { value: "https://api.wcc.best/sub?" },
+          { value: "https://firefly-sub.herokuapp.com/sub?" },
         ],
         remoteConfig: [
           {
@@ -374,6 +366,21 @@ export default {
               {
                 label: "不选,由接口提供方提供",
                 value: "",
+              },
+            ],
+          },
+          {
+            label: "LM-Firefly",
+            options: [
+              {
+                label: "AIO",
+                value:
+                  "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/AIO.ini",
+              },
+              {
+                label: "CordCloud",
+                value:
+                  "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/CordCloud.ini",
               },
             ],
           },
@@ -685,7 +692,7 @@ export default {
     this.form.clientType = "clash&new_name=true";
     this.form.customBackend = "https://firefly-sub.herokuapp.com/sub?";
     this.form.remoteConfig =
-      "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online.ini";
+      "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/CordCloud.ini";
     this.getBackendVersion();
   },
   methods: {
