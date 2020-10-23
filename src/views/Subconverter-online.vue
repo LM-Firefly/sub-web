@@ -123,14 +123,13 @@
                         label="输出为 Node List"
                         border
                       ></el-checkbox>
+                      <el-checkbox
+                        v-model="form.expand"
+                        label="展开规则"
+                        border
+                      ></el-checkbox>
                     </el-col>
                     <el-popover placement="bottom" v-model="form.extraset">
-                      <el-row>
-                        <el-checkbox
-                          v-model="form.expand"
-                          label="展开规则"
-                        ></el-checkbox>
-                      </el-row>
                       <el-row>
                         <el-checkbox
                           v-model="form.udp"
