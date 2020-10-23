@@ -128,13 +128,13 @@
                       <el-row>
                         <el-checkbox
                           v-model="form.new_name"
-                          label="Clash New Field"
+                          label="Clash 新字段"
                         ></el-checkbox>
                       </el-row>
                       <el-row>
                         <el-checkbox
                           v-model="form.expand"
-                          label="Rule Provider"
+                          label="展开规则"
                         ></el-checkbox>
                       </el-row>
                       <el-row>
@@ -652,7 +652,7 @@ export default {
         appendType: false,
         insert: false, // 是否插入默认订阅的节点，对应配置项 insert_url
         new_name: true, // 是否使用 Clash 新字段
-        expand: true, // 是否使用 Rule Provider
+        expand: true, // 是否展开规则
 
         // tpl 定制功能
         tpl: {
