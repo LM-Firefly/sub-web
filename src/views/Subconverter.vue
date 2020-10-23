@@ -133,6 +133,12 @@
                       </el-row>
                       <el-row>
                         <el-checkbox
+                          v-model="form.expand"
+                          label="Rule Provider"
+                        ></el-checkbox>
+                      </el-row>
+                      <el-row>
+                        <el-checkbox
                           v-model="form.udp"
                           label="启用 UDP"
                         ></el-checkbox>
@@ -153,6 +159,18 @@
                         <el-checkbox
                           v-model="form.fdn"
                           label="过滤非法节点"
+                        ></el-checkbox>
+                      </el-row>
+                      <el-row>
+                        <el-checkbox
+                          v-model="form.tfo"
+                          label="TCP Fast Open"
+                        ></el-checkbox>
+                      </el-row>
+                      <el-row>
+                        <el-checkbox
+                          v-model="form.scv"
+                          label="Skip Cert Verify"
                         ></el-checkbox>
                       </el-row>
                       <el-button slot="reference">更多选项</el-button>
@@ -634,6 +652,7 @@ export default {
         appendType: false,
         insert: false, // 是否插入默认订阅的节点，对应配置项 insert_url
         new_name: true, // 是否使用 Clash 新字段
+        expand: true, // 是否使用 Rule Provider
 
         // tpl 定制功能
         tpl: {
@@ -824,7 +843,9 @@ export default {
           "&fdn=" +
           this.form.fdn.toString() +
           "&sort=" +
-          this.form.sort.toString();
+          this.form.sort.toString() +
+          "&expand=" +
+          this.form.expand.toString();
 
         if (this.form.tpl.surge.doh === true) {
           this.customSubUrl += "&surge.doh=true";
@@ -834,7 +855,6 @@ export default {
           if (this.form.tpl.clash.doh === true) {
             this.customSubUrl += "&clash.doh=true";
           }
-
           this.customSubUrl += "&new_name=" + this.form.new_name.toString();
         }
       }
