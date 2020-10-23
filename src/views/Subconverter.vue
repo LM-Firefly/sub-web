@@ -354,10 +354,12 @@ export default {
         customBackend: {
           "localhost:25500 本地版": "http://localhost:25500/sub?",
           "firefly-sub.herokuapp.com": "https://firefly-sub.herokuapp.com/sub?",
+          "firefly-sub.vercel.app": "https://firefly-sub.vercel.app/sub?",
         },
         backendOptions: [
           { value: "http://localhost:25500/sub?" },
           { value: "https://firefly-sub.herokuapp.com/sub?" },
+          { value: "https://firefly-sub.vercel.app/sub?" },
         ],
         remoteConfig: [
           {
@@ -690,7 +692,7 @@ export default {
   },
   mounted() {
     this.form.clientType = "clash&new_name=true";
-    this.form.customBackend = "https://firefly-sub.herokuapp.com/sub?";
+    this.form.customBackend = "https://firefly-sub.vercel.app/sub?";
     this.form.remoteConfig =
       "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/CordCloud.ini";
     this.getBackendVersion();
