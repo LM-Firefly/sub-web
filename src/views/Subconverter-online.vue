@@ -353,13 +353,13 @@ export default {
         },
         customBackend: {
           "localhost:25500 本地版": "http://localhost:25500/sub?",
-          "firefly-sub.herokuapp.com": "https://firefly-sub.herokuapp.com/sub?",
           "firefly-sub.vercel.app": "https://firefly-sub.vercel.app/sub?",
+          "firefly-sub.herokuapp.com": "https://firefly-sub.herokuapp.com/sub?",
         },
         backendOptions: [
           { value: "http://localhost:25500/sub?" },
-          { value: "https://firefly-sub.herokuapp.com/sub?" },
           { value: "https://firefly-sub.vercel.app/sub?" },
+          { value: "https://firefly-sub.herokuapp.com/sub?" },
         ],
         remoteConfig: [
           {
