@@ -4,7 +4,7 @@
       <el-col>
         <el-card>
           <div slot="header">
-            订阅转换
+            Firefly-SubConverter
             <svg-icon
               icon-class="github"
               style="margin-left: 20px"
@@ -693,7 +693,7 @@ export default {
   },
   created() {
     // document.title = "Subscription Converter";
-    document.title = "在线订阅转换";
+    document.title = "Firefly-SubConverter";
     this.isPC = this.$getOS().isPc;
 
     // 获取 url cache
