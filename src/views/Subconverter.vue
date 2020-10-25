@@ -134,7 +134,11 @@
                       </el-row>
                       <el-button slot="reference">Rule Provider 选项</el-button>
                     </el-popover>
-                    <el-popover placement="bottom" v-model="form.extraset" style="margin-left: 10px">
+                    <el-popover
+                      placement="bottom"
+                      v-model="form.extraset"
+                      style="margin-left: 10px"
+                    >
                       <el-row>
                         <el-checkbox
                           v-model="form.udp"
@@ -172,7 +176,11 @@
                         ></el-checkbox>
                       </el-row>
                       <el-row>
-                        <el-checkbox v-model="form.nodeList" label="输出为 Node List" border></el-checkbox>
+                        <el-checkbox
+                          v-model="form.nodeList"
+                          label="输出为 Node List"
+                          border
+                        ></el-checkbox>
                       </el-row>
                       <el-button slot="reference">节点处理</el-button>
                     </el-popover>
