@@ -124,7 +124,7 @@
                         border
                       ></el-checkbox>
                     </el-col>
-                    <el-popover placement="bottom" v-model="form.rule" style="margin-left: 20px">
+                    <el-popover placement="bottom" v-model="form.rule">
                       <el-row>
                         <el-checkbox
                           v-model="form.expand"
@@ -139,7 +139,7 @@
                       </el-row>
                       <el-button slot="reference">Rule Provider 选项</el-button>
                     </el-popover>
-                    <el-popover placement="bottom" v-model="form.extraset">
+                    <el-popover placement="bottom" v-model="form.extraset" style="margin-left: 10px">
                       <el-row>
                         <el-checkbox
                           v-model="form.udp"
@@ -178,7 +178,7 @@
                       </el-row>
                       <el-button slot="reference">更多选项</el-button>
                     </el-popover>
-                    <el-popover placement="bottom" style="margin-left: 20px">
+                    <el-popover placement="bottom" style="margin-left: 10px">
                       <el-row>
                         <el-checkbox
                           v-model="form.tpl.surge.doh"
