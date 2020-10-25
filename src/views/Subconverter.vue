@@ -179,7 +179,6 @@
                         <el-checkbox
                           v-model="form.nodeList"
                           label="输出为 Node List"
-                          border
                         ></el-checkbox>
                       </el-row>
                       <el-button slot="reference">节点处理</el-button>
