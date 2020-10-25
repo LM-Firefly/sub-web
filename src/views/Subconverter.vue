@@ -123,6 +123,7 @@
                         label="输出为 Node List"
                         border
                       ></el-checkbox>
+                    <el-popover placement="bottom" v-model="form.extraset">
                       <el-row>
                         <el-checkbox
                           v-model="form.expand"
@@ -135,6 +136,7 @@
                           border
                         ></el-checkbox>
                       </el-row>
+                    </el-popover>
                     </el-col>
                     <el-popover placement="bottom" v-model="form.extraset">
                       <el-row>
