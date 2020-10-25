@@ -135,10 +135,7 @@
                       <el-button slot="reference">Rule Provider 选项</el-button>
                     </el-popover>
                     <el-popover
-                      placement="bottom"
-                      v-model="form.extraset"
-                      style="margin-left: 10px"
-                    >
+                      placement="bottom" v-model="form.extraset" style="margin-left: 10px">
                       <el-row>
                         <el-checkbox
                           v-model="form.udp"
@@ -595,15 +592,6 @@ export default {
         expand: false, // 是否展开规则
         classic: false, // 是否展开规则
 
-        // tpl 定制功能
-        tpl: {
-          surge: {
-            doh: false, // dns 查询是否使用 DoH
-          },
-          clash: {
-            doh: false,
-          },
-        },
       },
 
       loading: false,
@@ -789,6 +777,7 @@ export default {
           this.form.expand.toString() +
           "&classic=" +
           this.form.classic.toString();
+
           if (this.form.clientType === "clash") {
           this.customSubUrl += "&new_name=" + this.form.new_name.toString();
         }
