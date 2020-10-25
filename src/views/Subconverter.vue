@@ -123,21 +123,22 @@
                         label="输出为 Node List"
                         border
                       ></el-checkbox>
-                      <el-popover placement="bottom" v-model="form.rule">
-                        <el-row>
-                          <el-checkbox
-                            v-model="form.expand"
-                            label="展开规则"
-                            border
-                          ></el-checkbox>
-                          <el-checkbox
-                            v-model="form.classic"
-                            label="Classic Rule Provider"
-                            border
-                          ></el-checkbox>
-                        </el-row>
-                      </el-popover>
                     </el-col>
+                    <el-popover placement="bottom" v-model="form.rule" style="margin-left: 20px">
+                      <el-row>
+                        <el-checkbox
+                          v-model="form.expand"
+                          label="展开规则"
+                        ></el-checkbox>
+                      </el-row>
+                      <el-row>
+                        <el-checkbox
+                          v-model="form.classic"
+                          label="Classic Rule Provider"
+                        ></el-checkbox>
+                      </el-row>
+                      <el-button slot="reference">Rule Provider 选项</el-button>
+                    </el-popover>
                     <el-popover placement="bottom" v-model="form.extraset">
                       <el-row>
                         <el-checkbox
