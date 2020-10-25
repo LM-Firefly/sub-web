@@ -123,11 +123,18 @@
                         label="输出为 Node List"
                         border
                       ></el-checkbox>
-                      <el-checkbox
-                        v-model="form.expand"
-                        label="展开规则"
-                        border
-                      ></el-checkbox>
+                      <el-row>
+                        <el-checkbox
+                          v-model="form.expand"
+                          label="展开规则"
+                          border
+                        ></el-checkbox>
+                        <el-checkbox
+                          v-model="form.classic"
+                          label="Classic Rule Provider"
+                          border
+                        ></el-checkbox>
+                      </el-row>
                     </el-col>
                     <el-popover placement="bottom" v-model="form.extraset">
                       <el-row>
@@ -837,7 +844,9 @@ export default {
           "&sort=" +
           this.form.sort.toString() +
           "&expand=" +
-          this.form.expand.toString();
+          this.form.expand.toString() +
+          "&classic=" +
+          this.form.classic.toString();
 
         if (this.form.tpl.surge.doh === true) {
           this.customSubUrl += "&surge.doh=true";
