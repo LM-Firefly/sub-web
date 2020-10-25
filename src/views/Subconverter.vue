@@ -123,20 +123,20 @@
                         label="输出为 Node List"
                         border
                       ></el-checkbox>
-                    <el-popover placement="bottom" v-model="form.extraset">
-                      <el-row>
-                        <el-checkbox
-                          v-model="form.expand"
-                          label="展开规则"
-                          border
-                        ></el-checkbox>
-                        <el-checkbox
-                          v-model="form.classic"
-                          label="Classic Rule Provider"
-                          border
-                        ></el-checkbox>
-                      </el-row>
-                    </el-popover>
+                      <el-popover placement="bottom" v-model="form.rule">
+                        <el-row>
+                          <el-checkbox
+                            v-model="form.expand"
+                            label="展开规则"
+                            border
+                          ></el-checkbox>
+                          <el-checkbox
+                            v-model="form.classic"
+                            label="Classic Rule Provider"
+                            border
+                          ></el-checkbox>
+                        </el-row>
+                      </el-popover>
                     </el-col>
                     <el-popover placement="bottom" v-model="form.extraset">
                       <el-row>
@@ -645,6 +645,7 @@ export default {
         filename: "",
         emoji: true,
         nodeList: false,
+        rule: false,
         extraset: false,
         sort: false,
         udp: false,
@@ -654,6 +655,7 @@ export default {
         appendType: false,
         insert: false, // 是否插入默认订阅的节点，对应配置项 insert_url
         expand: false, // 是否展开规则
+        classic: false, // 是否展开规则
 
         // tpl 定制功能
         tpl: {
