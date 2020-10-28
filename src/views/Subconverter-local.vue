@@ -164,7 +164,11 @@
                       </el-row>
                       <el-button slot="reference">节点处理</el-button>
                     </el-popover>
-                    <el-popover placement="bottom" v-model="form.rule" style="margin-left: 10px">
+                    <el-popover
+                      placement="bottom"
+                      v-model="form.rule"
+                      style="margin-left: 10px"
+                    >
                       <el-row>
                         <el-checkbox
                           v-model="form.expand"
@@ -386,12 +390,19 @@ export default {
                   "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_AdblockPlus.ini",
               },
               {
+                label:
+                  "ACL4SSR_Full_MultiMode 全分组 自动测速、故障转移、负载均衡",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_MultiMode.ini",
+              },
+              {
                 label: "ACL4SSR_Full 全分组 重度用户使用",
                 value:
                   "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full.ini",
               },
               {
-                label: "ACL4SSR_Full_AdblockPlus 全分组 重度用户使用 更多去广告",
+                label:
+                  "ACL4SSR_Full_AdblockPlus 全分组 重度用户使用 更多去广告",
                 value:
                   "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_AdblockPlus.ini",
               },
@@ -401,9 +412,9 @@ export default {
                   "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_Netflix.ini",
               },
               {
-                label: "ACL4SSR_NoAuto 无自动测速",
+                label: "ACL4SSR_Full_NoAuto.ini 全分组 无自动测速 重度用户使用",
                 value:
-                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_NoAuto.ini",
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_NoAuto.ini",
               },
               {
                 label: "ACL4SSR_Mini 精简版",
@@ -421,7 +432,8 @@ export default {
                   "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_Fallback.ini",
               },
               {
-                label: "ACL4SSR_Mini_MultiMode.ini 精简版 自动测速、故障转移、负载均衡",
+                label:
+                  "ACL4SSR_Mini_MultiMode.ini 精简版 自动测速、故障转移、负载均衡",
                 value:
                   "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_MultiMode.ini",
               },
@@ -431,9 +443,9 @@ export default {
                   "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_NoAuto.ini",
               },
               {
-                label: "ACL4SSR_Full_NoAuto.ini 全分组 无自动测速 重度用户使用",
+                label: "ACL4SSR_NoAuto 无自动测速",
                 value:
-                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_NoAuto.ini",
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_NoAuto.ini",
               },
               {
                 label: "ACL4SSR_NoReject 无广告拦截规则",
