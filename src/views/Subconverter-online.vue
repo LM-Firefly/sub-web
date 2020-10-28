@@ -404,7 +404,7 @@ export default {
                 label:
                   "ACL4SSR_Full_MultiMode 全分组 自动测速、故障转移、负载均衡",
                 value:
-                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_MultiMode.ini",
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Ful_MultiMode.ini",
               },
               {
                 label: "ACL4SSR_Full 全分组 重度用户使用",
