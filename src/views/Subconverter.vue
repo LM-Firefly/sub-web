@@ -651,6 +651,7 @@ export default {
   mounted() {
     this.form.clientType = "clash&new_name=true";
     this.form.customBackend = "https://firefly-sub.vercel.app/sub?";
+    this.notify();
     this.form.remoteConfig =
       "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/CordCloud.ini";
     this.getBackendVersion();
@@ -828,6 +829,19 @@ export default {
         .finally(() => {
           this.loading = false;
         });
+    },
+    notify() {
+      const h = this.$createElement;
+
+      this.$notify({
+        title: "隐私提示",
+        type: "warning",
+        message: h(
+          "i",
+          { style: "color: teal" },
+          "各种订阅链接（短链接服务除外）生成纯前端实现，无隐私问题。默认提供后端转换服务，隐私担忧者请自行搭建后端服务。"
+        ),
+      });
     },
     confirmUploadConfig() {
       if (this.uploadConfig === "") {
