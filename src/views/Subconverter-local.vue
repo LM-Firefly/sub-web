@@ -51,47 +51,50 @@
                 </el-select>
               </el-form-item>
 
-              <el-form-item label="远程配置:">
-                <el-select
-                  v-model="form.remoteConfig"
-                  allow-create
-                  filterable
-                  placeholder="请选择"
-                  style="width: 100%"
-                >
-                  <el-option-group
-                    v-for="group in options.remoteConfig"
-                    :key="group.label"
-                    :label="group.label"
-                  >
-                    <el-option
-                      v-for="item in group.options"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    ></el-option>
-                  </el-option-group>
-                </el-select>
-              </el-form-item>
-
-              <el-form-item label="后端地址:">
-                <el-select
-                  v-model="form.customBackend"
-                  allow-create
-                  filterable
-                  placeholder="请选择"
-                  style="width: 100%"
-                >
-                  <el-option
-                    v-for="(v, k) in options.customBackend"
-                    :key="k"
-                    :label="k"
-                    :value="v"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-
               <div v-if="advanced === '2'">
+                <el-form-item label="后端地址:">
+                  <el-autocomplete
+                    style="width: 100%"
+                    v-model="form.customBackend"
+                    :fetch-suggestions="backendSearch"
+                    placeholder="动动小手，（建议）自行搭建后端服务。例：http://127.0.0.1:25500/sub?"
+                  >
+                    <el-button
+                      slot="append"
+                      @click="gotoGayhub"
+                      icon="el-icon-link"
+                      >前往项目仓库</el-button
+                    >
+                  </el-autocomplete>
+                </el-form-item>
+                <el-form-item label="远程配置:">
+                  <el-select
+                    v-model="form.remoteConfig"
+                    allow-create
+                    filterable
+                    placeholder="请选择"
+                    style="width: 100%"
+                  >
+                    <el-option-group
+                      v-for="group in options.remoteConfig"
+                      :key="group.label"
+                      :label="group.label"
+                    >
+                      <el-option
+                        v-for="item in group.options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      ></el-option>
+                    </el-option-group>
+                    <el-button
+                      slot="append"
+                      @click="gotoRemoteConfig"
+                      icon="el-icon-link"
+                      >配置示例</el-button
+                    >
+                  </el-select>
+                </el-form-item>
                 <el-form-item label="包含节点:">
                   <el-input
                     v-model="form.includeRemarks"
@@ -294,7 +297,7 @@
             v-model="uploadConfig"
             type="textarea"
             :autosize="{ minRows: 15, maxRows: 15 }"
-            maxlength="10000"
+            maxlength="5000"
             show-word-limit
           ></el-input>
         </el-form-item>
@@ -331,9 +334,9 @@ const tgBotLink = process.env.VUE_APP_BOT_LINK;
 
 export default {
   data() {
-    var data = {
+    return {
       backendVersion: "",
-      advanced: "1",
+      advanced: "2",
 
       // 是否为 PC 端
       isPC: true,
@@ -371,8 +374,28 @@ export default {
             label: "默认",
             options: [
               {
-                label: "不选，由接口提供方提供",
+                label: "不选,由接口提供方提供",
                 value: "",
+              },
+            ],
+          },
+          {
+            label: "LM-Firefly",
+            options: [
+              {
+                label: "AIO",
+                value:
+                  "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/AIO.ini",
+              },
+              {
+                label: "CordCloud",
+                value:
+                  "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/CordCloud.ini",
+              },
+              {
+                label: "Clash-RULE-SET",
+                value:
+                  "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/Clash-RULE-SET.ini",
               },
             ],
           },
@@ -564,6 +587,21 @@ export default {
               },
             ],
           },
+          {
+            label: "Special",
+            options: [
+              {
+                label: "NeteaseUnblock(仅规则，No-Urltest)",
+                value:
+                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/special/netease.ini",
+              },
+              {
+                label: "Basic(仅GEOIP CN + Final)",
+                value:
+                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/special/basic.ini",
+              },
+            ],
+          },
         ],
       },
       form: {
@@ -624,7 +662,7 @@ export default {
     return data;
   },
   created() {
-    // document.title = "Subscription Converter";
+    // document.title = "Firefly-SubConverter";
     document.title = "Firefly-SubConverter";
     this.isPC = this.$getOS().isPc;
 
@@ -636,6 +674,7 @@ export default {
   mounted() {
     this.form.clientType = "clash&new_name=true";
     this.form.customBackend = "https://firefly-sub.vercel.app/sub?";
+    this.notify();
     this.form.remoteConfig =
       "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/CordCloud.ini";
     this.getBackendVersion();
@@ -646,9 +685,6 @@ export default {
     },
     goToProject() {
       window.open(project);
-    },
-    gotoTgChannel() {
-      window.open(tgBotLink);
     },
     gotoGayhub() {
       window.open(gayhubRelease);
@@ -698,30 +734,6 @@ export default {
       let sourceSub = this.form.sourceSubUrl;
       sourceSub = sourceSub.replace(/(\n|\r|\n\r)/g, "|");
 
-      // 薯条屏蔽
-      if (
-        sourceSub.indexOf("losadhwse") !== -1 &&
-        (backend.indexOf("py6.pw") !== -1 ||
-          backend.indexOf("subconverter-web.now.sh") !== -1 ||
-          backend.indexOf("subconverter.herokuapp.com") !== -1 ||
-          backend.indexOf("api.wcc.best") !== -1)
-      ) {
-        this.$alert(
-          "此机场订阅已将该后端屏蔽，请自建后端转换。",
-          "转换错误提示",
-          {
-            confirmButtonText: "确定",
-            callback: (action) => {
-              this.$message({
-                type: "error",
-                message: `action: ${action}`,
-              });
-            },
-          }
-        );
-        return false;
-      }
-
       this.customSubUrl =
         backend +
         "target=" +
@@ -731,11 +743,11 @@ export default {
         "&insert=" +
         this.form.insert;
 
-      if (config !== "") {
-        this.customSubUrl += "&config=" + encodeURIComponent(config);
-      }
-
       if (this.advanced === "2") {
+        if (this.form.remoteConfig !== "") {
+          this.customSubUrl +=
+            "&config=" + encodeURIComponent(this.form.remoteConfig);
+        }
         if (this.form.excludeRemarks !== "") {
           this.customSubUrl +=
             "&exclude=" + encodeURIComponent(this.form.excludeRemarks);
@@ -813,6 +825,19 @@ export default {
         .finally(() => {
           this.loading = false;
         });
+    },
+    notify() {
+      const h = this.$createElement;
+
+      this.$notify({
+        title: "隐私提示",
+        type: "warning",
+        message: h(
+          "i",
+          { style: "color: teal" },
+          "各种订阅链接（短链接服务除外）生成纯前端实现，无隐私问题。默认提供后端转换服务，隐私担忧者请自行搭建后端服务。"
+        ),
+      });
     },
     confirmUploadConfig() {
       if (this.uploadConfig === "") {
