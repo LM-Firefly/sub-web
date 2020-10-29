@@ -401,6 +401,11 @@ export default {
                 value:
                   "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/CordCloud.ini",
               },
+              {
+                label: "Clash-RULE-SET",
+                value:
+                  "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/Clash-RULE-SET.ini",
+              },
             ],
           },
           {
