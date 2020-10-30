@@ -205,22 +205,6 @@
                   >
                 </el-input>
               </el-form-item>
-              <el-form-item label="订阅短链接:">
-                <el-input
-                  class="copy-content"
-                  disabled
-                  v-model="curtomShortSubUrl"
-                >
-                  <el-button
-                    slot="append"
-                    v-clipboard:copy="curtomShortSubUrl"
-                    v-clipboard:success="onCopy"
-                    ref="copy-btn"
-                    icon="el-icon-document-copy"
-                    >复制</el-button
-                  >
-                </el-input>
-              </el-form-item>
 
               <el-form-item
                 label-width="0px"
@@ -233,26 +217,10 @@
                   :disabled="form.sourceSubUrl.length === 0"
                   >生成订阅链接</el-button
                 >
-                <el-button
-                  style="width: 120px"
-                  type="danger"
-                  @click="makeShortUrl"
-                  :loading="loading"
-                  :disabled="customSubUrl.length === 0"
-                  >生成短链接</el-button
-                >
                 <!-- <el-button style="width: 120px" type="primary" @click="surgeInstall" icon="el-icon-connection">一键导入Surge</el-button> -->
               </el-form-item>
 
               <el-form-item label-width="0px" style="text-align: center">
-                <el-button
-                  style="width: 120px"
-                  type="primary"
-                  @click="dialogUploadConfigVisible = true"
-                  icon="el-icon-upload"
-                  :loading="loading"
-                  >上传配置</el-button
-                >
                 <el-button
                   style="width: 120px"
                   type="primary"
@@ -267,54 +235,6 @@
         </el-card>
       </el-col>
     </el-row>
-
-    <el-dialog
-      :visible.sync="dialogUploadConfigVisible"
-      :show-close="false"
-      :close-on-click-modal="false"
-      :close-on-press-escape="false"
-      width="700px"
-    >
-      <div slot="title">
-        Remote config upload
-        <el-popover trigger="hover" placement="right" style="margin-left: 10px">
-          <el-link
-            type="primary"
-            :href="sampleConfig"
-            target="_blank"
-            icon="el-icon-info"
-            >参考配置</el-link
-          >
-          <i class="el-icon-question" slot="reference"></i>
-        </el-popover>
-      </div>
-      <el-form label-position="left">
-        <el-form-item prop="uploadConfig">
-          <el-input
-            v-model="uploadConfig"
-            type="textarea"
-            :autosize="{ minRows: 15, maxRows: 15 }"
-            maxlength="10000"
-            show-word-limit
-          ></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button
-          @click="
-            uploadConfig = '';
-            dialogUploadConfigVisible = false;
-          "
-          >取 消</el-button
-        >
-        <el-button
-          type="primary"
-          @click="confirmUploadConfig"
-          :disabled="uploadConfig.length === 0"
-          >确 定</el-button
-        >
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -324,9 +244,6 @@ const remoteConfigSample = process.env.VUE_APP_SUBCONVERTER_REMOTE_CONFIG;
 const gayhubRelease = process.env.VUE_APP_BACKEND_RELEASE;
 const defaultBackend =
   process.env.VUE_APP_SUBCONVERTER_DEFAULT_BACKEND + "/sub?";
-const shortUrlBackend = process.env.VUE_APP_MYURLS_DEFAULT_BACKEND + "/short";
-const configUploadBackend =
-  process.env.VUE_APP_CONFIG_UPLOAD_BACKEND + "/config/upload";
 const tgBotLink = process.env.VUE_APP_BOT_LINK;
 
 export default {
@@ -623,11 +540,7 @@ export default {
 
       loading: false,
       customSubUrl: "",
-      curtomShortSubUrl: "",
 
-      dialogUploadConfigVisible: false,
-      uploadConfig: "",
-      uploadPassword: "",
       myBot: tgBotLink,
       sampleConfig: remoteConfigSample,
     };
@@ -814,39 +727,7 @@ export default {
       this.$copyText(this.customSubUrl);
       this.$message.success("定制订阅已复制到剪贴板");
     },
-    makeShortUrl() {
-      if (this.customSubUrl === "") {
-        this.$message.warning("请先生成订阅链接，再获取对应短链接");
-        return false;
-      }
 
-      this.loading = true;
-
-      let data = new FormData();
-      data.append("longUrl", btoa(this.customSubUrl));
-
-      this.$axios
-        .post(shortUrlBackend, data, {
-          header: {
-            "Content-Type": "application/form-data; charset=utf-8",
-          },
-        })
-        .then((res) => {
-          if (res.data.Code === 1 && res.data.ShortUrl !== "") {
-            this.curtomShortSubUrl = res.data.ShortUrl;
-            this.$copyText(res.data.ShortUrl);
-            this.$message.success("短链接已复制到剪贴板");
-          } else {
-            this.$message.error("短链接获取失败：" + res.data.Message);
-          }
-        })
-        .catch(() => {
-          this.$message.error("短链接获取失败");
-        })
-        .finally(() => {
-          this.loading = false;
-        });
-    },
     notify() {
       const h = this.$createElement;
 
@@ -860,46 +741,7 @@ export default {
         ),
       });
     },
-    confirmUploadConfig() {
-      if (this.uploadConfig === "") {
-        this.$message.warning("远程配置不能为空");
-        return false;
-      }
 
-      this.loading = true;
-
-      let data = new FormData();
-      data.append("password", this.uploadPassword);
-      data.append("config", this.uploadConfig);
-
-      this.$axios
-        .post(configUploadBackend, data, {
-          header: {
-            "Content-Type": "application/form-data; charset=utf-8",
-          },
-        })
-        .then((res) => {
-          if (res.data.Code === 1 && res.data.url !== "") {
-            this.$message.success(
-              "远程配置上传成功，配置链接已复制到剪贴板，有效期三个月望知悉"
-            );
-
-            // 自动填充至『表单-远程配置』
-            this.form.remoteConfig = res.data.Url;
-            this.$copyText(this.form.remoteConfig);
-
-            this.dialogUploadConfigVisible = false;
-          } else {
-            this.$message.error("远程配置上传失败：" + res.data.Message);
-          }
-        })
-        .catch(() => {
-          this.$message.error("远程配置上传失败");
-        })
-        .finally(() => {
-          this.loading = false;
-        });
-    },
     backendSearch(queryString, cb) {
       let backends = this.options.backendOptions;
 
