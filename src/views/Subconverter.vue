@@ -217,10 +217,6 @@
                   :disabled="form.sourceSubUrl.length === 0"
                   >生成订阅链接</el-button
                 >
-                <!-- <el-button style="width: 120px" type="primary" @click="surgeInstall" icon="el-icon-connection">一键导入Surge</el-button> -->
-              </el-form-item>
-
-              <el-form-item label-width="0px" style="text-align: center">
                 <el-button
                   style="width: 120px"
                   type="primary"
@@ -229,6 +225,7 @@
                   :disabled="customSubUrl.length === 0"
                   >一键导入Clash</el-button
                 >
+                <!-- <el-button style="width: 120px" type="primary" @click="surgeInstall" icon="el-icon-connection">一键导入Surge</el-button> -->
               </el-form-item>
             </el-form>
           </el-container>
