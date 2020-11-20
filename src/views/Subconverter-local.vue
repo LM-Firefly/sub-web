@@ -393,9 +393,9 @@ export default {
                   "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/CordCloud.ini",
               },
               {
-                label: "Clash-RULE-SET",
+                label: "AIO-Classic",
                 value:
-                  "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/Clash-RULE-SET.ini",
+                  "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/AIO-Classic.ini",
               },
             ],
           },

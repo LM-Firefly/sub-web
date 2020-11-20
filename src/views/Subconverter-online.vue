@@ -389,6 +389,11 @@ export default {
                 value:
                   "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/CordCloud.ini",
               },
+              {
+                label: "AIO-Classic",
+                value:
+                  "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/AIO-Classic.ini",
+              },
             ],
           },
           {
