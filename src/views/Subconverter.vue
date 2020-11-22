@@ -75,11 +75,11 @@
               </el-form-item>
 
               <el-form-item label="后端地址:">
-                <el-autocomplete
+                <el-select
                   v-model="form.customBackend"
                   allow-create
                   filterable
-                  placeholder="动动小手，（建议）自行搭建后端服务。例：https://firefly-sub.vercel.app/sub?"
+                  placeholder="请选择"
                   style="width: 100%"
                 >
                   <el-option
@@ -88,7 +88,7 @@
                     :label="k"
                     :value="v"
                   ></el-option>
-                </el-autocomplete>
+                </el-select>
               </el-form-item>
 
               <div v-if="advanced === '2'">
