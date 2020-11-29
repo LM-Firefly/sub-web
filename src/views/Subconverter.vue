@@ -298,12 +298,12 @@ export default {
             options: [
               {
                 label: "不选，由接口提供方提供",
-                value: ""
-              }
-            ]
+                value: "",
+              },
+            ],
           },
           {
-            label: "LM-Firefly",
+            label: "LM-Firefly (Online, 与Github 同步)",
             options: [
               {
                 label: "AIO",
@@ -323,7 +323,7 @@ export default {
             ],
           },
           {
-            label: "ACL4SSR",
+            label: "ACL4SSR (Online, 与Github 同步)",
             options: [
               {
                 label: "ACL4SSR 默认版 分组比较全",
@@ -401,45 +401,32 @@ export default {
             ],
           },
           {
-            label: "universal",
-            options: [
-              {
-                label: "No-Urltest",
-                value:
-                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/universal/no-urltest.ini",
-              },
-              {
-                label: "Urltest",
-                value:
-                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/universal/urltest.ini",
-              },
-            ],
-          },
-          {
-            label: "customized",
+            label: "机场定制",
             options: [
               {
                 label: "V2Pro",
                 value:
-                  "https://raw.githubusercontent.com/Mazeorz/airports/master/Clash/V2Pro.ini"
+                  "https://raw.githubusercontent.com/Mazeorz/airports/master/Clash/V2Pro.ini",
               },
               {
-              label: "史迪仔-自动测速",
-              value: "https://raw.githubusercontent.com/Mazeorz/airports/master/Clash/Stitch.ini"
+                label: "史迪仔-自动测速",
+                value:
+                  "https://raw.githubusercontent.com/Mazeorz/airports/master/Clash/Stitch.ini",
               },
               {
                 label: "史迪仔-负载均衡",
-                value: "https://raw.githubusercontent.com/Mazeorz/airports/master/Clash/Stitch-Balance.ini"
+                value:
+                  "https://raw.githubusercontent.com/Mazeorz/airports/master/Clash/Stitch-Balance.ini",
               },
               {
                 label: "Maying",
                 value:
-                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/maying.ini"
+                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/maying.ini",
               },
               {
                 label: "rixCloud",
                 value:
-                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/rixcloud.ini"
+                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/rixcloud.ini",
               },
               {
                 label: "YoYu",
@@ -782,17 +769,17 @@ export default {
       if (ls !== null) {
         let data = JSON.parse(ls);
         if (data.expire > now) {
-          itemValue = data.value
+          itemValue = data.value;
         } else {
           localStorage.removeItem(itemKey);
         }
       }
 
-      return itemValue
+      return itemValue;
     },
     setLocalStorageItem(itemKey, itemValue) {
-      const ttl = process.env.VUE_APP_CACHE_TTL
-      const now = +new Date()
+      const ttl = process.env.VUE_APP_CACHE_TTL;
+      const now = +new Date();
 
       let data = {
         setTime: now,
