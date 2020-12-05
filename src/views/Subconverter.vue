@@ -311,9 +311,19 @@ export default {
                   "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/AIO.ini",
               },
               {
+                label: "AIO-NoReject",
+                value:
+                  "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/AIO-NoReject.ini",
+              },
+              {
                 label: "CordCloud",
                 value:
                   "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/CordCloud.ini",
+              },
+              {
+                label: "CordCloud-NoReject",
+                value:
+                  "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/CordCloud-NoReject.ini",
               },
               {
                 label: "AIO-Classic",
