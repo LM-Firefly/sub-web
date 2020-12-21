@@ -92,22 +92,6 @@
               </el-form-item>
 
               <div v-if="advanced === '2'">
-                <el-form-item label="TUN & DNS:">
-                  <el-select
-                    v-model="form.clash.dns"
-                    allow-create
-                    filterable
-                    style="width: 100%"
-                  >
-                    <el-option
-                      v-for="(v, k) in options.clash.dns"
-                      :key="k"
-                      :label="k"
-                      :value="v"
-                    ></el-option>
-                  </el-select>
-                </el-form-item>
-
                 <el-form-item label="包含节点:">
                   <el-input
                     v-model="form.includeRemarks"
@@ -125,6 +109,9 @@
                     v-model="form.filename"
                     placeholder="返回的订阅文件名"
                   />
+                </el-form-item>
+                <el-form-item label="TUN & DNS:">
+                  <el-input v-model="form.clash.dns" placeholder="CFW or CFA" />
                 </el-form-item>
                 <el-form-item label-width="0px">
                   <el-row type="flex">
@@ -286,10 +273,6 @@ export default {
           SSR: "ssr",
           SSD: "ssd",
           ClashR: "clashr",
-        },
-        clash.dns: {
-          CFW: "clash.dns=cfw",
-          CFA: "clash.dns=cfa",
         },
         customBackend: {
           "localhost:25500 本地版": "http://localhost:25500/sub?",
@@ -715,6 +698,10 @@ export default {
         if (this.form.appendType) {
           this.customSubUrl +=
             "&append_type=" + this.form.appendType.toString();
+        }
+        if (this.form.clash.dns !== "") {
+          this.customSubUrl +=
+            "&clash.dns=" + encodeURIComponent(this.form.clash.dns);
         }
 
         this.customSubUrl +=
