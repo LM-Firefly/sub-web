@@ -122,6 +122,19 @@
                         border
                       ></el-checkbox>
                     </el-col>
+                    <el-popover
+                      placement="bottom"
+                      v-model="form.clashdns"
+                      style="margin-left: 10px"
+                    >
+                      <el-row>
+                        <el-input
+                          v-model="form.clashdns"
+                          placeholder="cfa or cfw"
+                        />
+                      </el-row>
+                      <el-button slot="reference">TUN & DNS</el-button>
+                    </el-popover>
                     <el-popover placement="bottom" v-model="form.extraset">
                       <el-row>
                         <el-checkbox
