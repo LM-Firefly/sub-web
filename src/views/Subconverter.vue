@@ -111,7 +111,7 @@
                   />
                 </el-form-item>
                 <el-form-item label="TUN & DNS:">
-                  <el-input v-model="form.clash.dns" placeholder="CFW or CFA" />
+                  <el-input v-model="form.clash.dns" placeholder="cfa or cfw" />
                 </el-form-item>
                 <el-form-item label-width="0px">
                   <el-row type="flex">
@@ -524,6 +524,7 @@ export default {
         excludeRemarks: "",
         includeRemarks: "",
         filename: "",
+        clash.dns: "",
         emoji: true,
         nodeList: false,
         rule: false,
