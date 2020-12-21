@@ -288,8 +288,8 @@ export default {
           ClashR: "clashr",
         },
         clash.dns: {
-          CFW:"clash.dns=cfw"
-          CFA: "clash.dns=cfa"
+          CFW: "clash.dns=cfw",
+          CFA: "clash.dns=cfa",
         },
         customBackend: {
           "localhost:25500 本地版": "http://localhost:25500/sub?",
