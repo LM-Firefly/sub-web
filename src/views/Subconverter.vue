@@ -524,7 +524,7 @@ export default {
         excludeRemarks: "",
         includeRemarks: "",
         filename: "",
-        "clash.dns": "",
+        clashdns: "",
         emoji: true,
         nodeList: false,
         rule: false,
