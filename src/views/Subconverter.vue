@@ -92,6 +92,22 @@
               </el-form-item>
 
               <div v-if="advanced === '2'">
+                <el-form-item label="TUN & DNS:">
+                  <el-select
+                    v-model="form.clash.dns"
+                    allow-create
+                    filterable
+                    style="width: 100%"
+                  >
+                    <el-option
+                      v-for="(v, k) in options.clash.dns"
+                      :key="k"
+                      :label="k"
+                      :value="v"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+
                 <el-form-item label="包含节点:">
                   <el-input
                     v-model="form.includeRemarks"
@@ -270,6 +286,10 @@ export default {
           SSR: "ssr",
           SSD: "ssd",
           ClashR: "clashr",
+        },
+        clash.dns: {
+          CFW:"clash.dns=cfw"
+          CFA: "clash.dns=cfa"
         },
         customBackend: {
           "localhost:25500 本地版": "http://localhost:25500/sub?",
