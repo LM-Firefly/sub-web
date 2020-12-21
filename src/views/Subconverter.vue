@@ -111,7 +111,7 @@
                   />
                 </el-form-item>
                 <el-form-item label="TUN & DNS:">
-                  <el-input v-model="form.clash.dns" placeholder="cfa or cfw" />
+                  <el-input v-model="form.clashdns" placeholder="cfa or cfw" />
                 </el-form-item>
                 <el-form-item label-width="0px">
                   <el-row type="flex">
@@ -524,7 +524,7 @@ export default {
         excludeRemarks: "",
         includeRemarks: "",
         filename: "",
-        clash.dns: "",
+        "clash.dns": "",
         emoji: true,
         nodeList: false,
         rule: false,
@@ -700,9 +700,9 @@ export default {
           this.customSubUrl +=
             "&append_type=" + this.form.appendType.toString();
         }
-        if (this.form.clash.dns !== "") {
+        if (this.form.clashdns !== "") {
           this.customSubUrl +=
-            "&clash.dns=" + encodeURIComponent(this.form.clash.dns);
+            "&clash.dns=" + encodeURIComponent(this.form.clashdns);
         }
 
         this.customSubUrl +=
