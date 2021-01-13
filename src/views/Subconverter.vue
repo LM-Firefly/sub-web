@@ -385,6 +385,11 @@ export default {
                   "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini.ini",
               },
               {
+                label: "ACL4SSR_Mini_MultiCountry 精简版 带港美日国家",
+                value:
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_MultiCountry.ini",
+              },
+              {
                 label: "ACL4SSR_Mini_AdblockPlus 精简版 更多去广告",
                 value:
                   "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_AdblockPlus.ini",
@@ -713,8 +718,6 @@ export default {
           this.form.emoji.toString() +
           "&list=" +
           this.form.nodeList.toString() +
-          "&udp=" +
-          this.form.udp.toString() +
           "&tfo=" +
           this.form.tfo.toString() +
           "&scv=" +
