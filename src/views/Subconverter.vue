@@ -718,6 +718,8 @@ export default {
           this.form.emoji.toString() +
           "&list=" +
           this.form.nodeList.toString() +
+          "&udp=" +
+          this.form.udp.toString() +
           "&tfo=" +
           this.form.tfo.toString() +
           "&scv=" +
