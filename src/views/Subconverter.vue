@@ -726,8 +726,6 @@ export default {
         this.customSubUrl +=
           "&emoji=" +
           this.form.emoji.toString() +
-          "&new_name=" +
-          this.form.new_name.toString() +
           "&list=" +
           this.form.nodeList.toString() +
           "&udp=" +
