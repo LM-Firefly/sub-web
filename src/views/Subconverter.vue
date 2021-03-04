@@ -40,7 +40,7 @@
                   @blur="saveSubUrl"
                 />
               </el-form-item>
-              <el-form-item label="客户端:">
+              <el-form-item label="生成类型:">
                 <el-select v-model="form.clientType" style="width: 100%">
                   <el-option
                     v-for="(v, k) in options.clientTypes"
@@ -122,6 +122,13 @@
                       <el-checkbox
                         v-model="form.emoji"
                         label="Emoji"
+                        border
+                      ></el-checkbox>
+                    </el-col>
+                    <el-col>
+                      <el-checkbox
+                        v-model="form.new_name"
+                        label="Clash新字段"
                         border
                       ></el-checkbox>
                     </el-col>
@@ -260,22 +267,24 @@ export default {
 
       options: {
         clientTypes: {
-          Clash新参数: "clash&new_name=true",
-          ClashR新参数: "clashr&new_name=true",
           Clash: "clash",
+          ClashR: "clashr",
+          Surge2: "surge&ver=2",
           Surge3: "surge&ver=3",
           Surge4: "surge&ver=4",
-          Loon: "loon",
-          SSAndroid: "sssub",
-          V2Ray: "v2ray",
           Quantumult: "quan",
-          QuantumultX: "quanx",
-          Surge2: "surge&ver=2",
+          "Quantumult X": "quanx",
+          Loon: "loon",
+          Mellow: "mellow",
           Surfboard: "surfboard",
-          SS: "ss",
-          SSR: "ssr",
-          SSD: "ssd",
-          ClashR: "clashr",
+          "Shadowsocks(SIP002)": "ss",
+          "Shadowsocks Android(SIP008)": "sssub",
+          ShadowsocksR: "ssr",
+          ShadowsocksD: "ssd",
+          V2Ray: "v2ray",
+          Trojan: "trojan",
+          "混合订阅（mixed）": "mixed",
+          自动判断客户端: "auto",
         },
         customBackend: {
           "localhost:25500 本地版": "http://localhost:25500/sub?",
@@ -546,6 +555,7 @@ export default {
         insert: false, // 是否插入默认订阅的节点，对应配置项 insert_url
         expand: false, // 是否展开规则
         classic: false, // 是否展开规则
+        new_name: true, // 是否使用 Clash 新字段
       },
 
       loading: false,
@@ -589,7 +599,7 @@ export default {
     }
   },
   mounted() {
-    this.form.clientType = "clash&new_name=true";
+    this.form.clientType = "clash";
     this.form.customBackend = "https://firefly-sub.vercel.app/sub?";
     this.notify();
     this.form.remoteConfig =
@@ -716,6 +726,8 @@ export default {
         this.customSubUrl +=
           "&emoji=" +
           this.form.emoji.toString() +
+          "&new_name=" +
+          this.form.new_name.toString() +
           "&list=" +
           this.form.nodeList.toString() +
           "&udp=" +

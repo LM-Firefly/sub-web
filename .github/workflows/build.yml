@@ -3,7 +3,6 @@ name: Build
 on:
   workflow_dispatch:
   push:
-    branches: [ master ]
 
 jobs:
 
@@ -33,6 +32,7 @@ jobs:
         name: dist
         path: dist/
     - name: Push update to now-subconverter
+      if: ${{ github.ref == 'refs/heads/master' }}
       uses: zzzze/webhook-trigger@master
       with:
         data: '{"ref":"master"}'
