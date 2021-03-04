@@ -129,6 +129,7 @@
                       <el-checkbox
                         v-model="form.new_name"
                         label="Clash新字段"
+                        style="margin-left: 10px"
                         border
                       ></el-checkbox>
                     </el-col>
