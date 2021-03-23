@@ -125,11 +125,12 @@
                         border
                       ></el-checkbox>
                     </el-col>
-                    <el-col style="margin-left: 10px">
+                    <el-col>
                       <el-checkbox
                         v-model="form.new_name"
                         label="Clash新字段"
                         border
+                        style="margin-left: 10px"
                       ></el-checkbox>
                     </el-col>
                     <el-popover placement="bottom" v-model="form.extraset">
