@@ -36,11 +36,11 @@
                   v-model="form.sourceSubUrl"
                   type="textarea"
                   rows="3"
-                  placeholder="支持订阅或ss/ssr/vmess链接，多个链接每行一个或用 | 分隔"
+                  placeholder="支持各种订阅链接或单节点链接，多个链接每行一个或用 | 分隔"
                   @blur="saveSubUrl"
                 />
               </el-form-item>
-              <el-form-item label="生成类型:">
+              <el-form-item label="客户端项:">
                 <el-select v-model="form.clientType" style="width: 100%">
                   <el-option
                     v-for="(v, k) in options.clientTypes"
@@ -435,6 +435,91 @@ export default {
             label: "机场定制",
             options: [
               {
+                label: "EXFLUX",
+                value:
+                  "https://gist.github.com/jklolixxs/16964c46bad1821c70fa97109fd6faa2/raw/EXFLUX.ini",
+              },
+              {
+                label: "NaNoport",
+                value:
+                  "https://gist.github.com/jklolixxs/32d4e9a1a5d18a92beccf3be434f7966/raw/NaNoport.ini",
+              },
+              {
+                label: "CordCloud",
+                value:
+                  "https://gist.github.com/jklolixxs/dfbe0cf71ffc547557395c772836d9a8/raw/CordCloud.ini",
+              },
+              {
+                label: "BigAirport",
+                value:
+                  "https://gist.github.com/jklolixxs/e2b0105c8be6023f3941816509a4c453/raw/BigAirport.ini",
+              },
+              {
+                label: "跑路云",
+                value:
+                  "https://gist.github.com/jklolixxs/9f6989137a2cfcc138c6da4bd4e4cbfc/raw/PaoLuCloud.ini",
+              },
+              {
+                label: "WaveCloud",
+                value:
+                  "https://gist.github.com/jklolixxs/fccb74b6c0018b3ad7b9ed6d327035b3/raw/WaveCloud.ini",
+              },
+              {
+                label: "几鸡",
+                value:
+                  "https://gist.github.com/jklolixxs/bfd5061dceeef85e84401482f5c92e42/raw/JiJi.ini",
+              },
+              {
+                label: "四季加速",
+                value:
+                  "https://gist.github.com/jklolixxs/6ff6e7658033e9b535e24ade072cf374/raw/SJ.ini",
+              },
+              {
+                label: "ImmTelecom",
+                value:
+                  "https://gist.github.com/jklolixxs/24f4f58bb646ee2c625803eb916fe36d/raw/ImmTelecom.ini",
+              },
+              {
+                label: "AmyTelecom",
+                value:
+                  "https://gist.github.com/jklolixxs/b53d315cd1cede23af83322c26ce34ec/raw/AmyTelecom.ini",
+              },
+              {
+                label: "Miaona",
+                value:
+                  "https://gist.github.com/jklolixxs/ff8ddbf2526cafa568d064006a7008e7/raw/Miaona.ini",
+              },
+              {
+                label: "Foo&Friends",
+                value:
+                  "https://gist.github.com/jklolixxs/df8fda1aa225db44e70c8ac0978a3da4/raw/Foo&Friends.ini",
+              },
+              {
+                label: "ABCloud",
+                value:
+                  "https://gist.github.com/jklolixxs/b1f91606165b1df82e5481b08fd02e00/raw/ABCloud.ini",
+              },
+              {
+                label: "希腊奶",
+                value:
+                  "https://raw.githubusercontent.com/MegumiUUU/megumiclash/master/common.ini",
+              },
+              {
+                label: "路飞船长",
+                value:
+                  "https://raw.githubusercontent.com/Mazeorz/airports/master/Clash/Luffy_balance.ini",
+              },
+              {
+                label: "CNIX",
+                value:
+                  "https://raw.githubusercontent.com/Mazeorz/airports/master/Clash/SSRcloud.ini",
+              },
+              {
+                label: "Nirvana",
+                value:
+                  "https://raw.githubusercontent.com/Mazetsz/ACL4SSR/master/Clash/config/V2rayPro.ini",
+              },
+              {
                 label: "V2Pro",
                 value:
                   "https://raw.githubusercontent.com/Mazeorz/airports/master/Clash/V2Pro.ini",
@@ -470,6 +555,11 @@ export default {
                   "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/ytoo.ini",
               },
               {
+                label: "w8ves",
+                value:
+                  "https://raw.nameless13.com/api/public/dl/M-We_Fn7/w8ves.ini",
+              },
+              {
                 label: "NyanCAT",
                 value:
                   "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/nyancat.ini",
@@ -478,6 +568,11 @@ export default {
                 label: "Nexitally",
                 value:
                   "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/nexitally.ini",
+              },
+              {
+                label: "布丁",
+                value:
+                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/pud.ini",
               },
               {
                 label: "SoCloud",
@@ -490,29 +585,29 @@ export default {
                   "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/ark.ini",
               },
               {
-                label: "ssrCloud",
-                value:
-                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/ssrcloud.ini",
-              },
-              {
-                label: "世葵Auto",
-                value:
-                  "https://raw.githubusercontent.com/Mazeorz/airports/master/Clash/SkslaPro-auto.ini",
-              },
-              {
-                label: "世葵Balance",
-                value:
-                  "https://raw.githubusercontent.com/Mazeorz/airports/master/Clash/SkslaPro-Balance.ini",
-              },
-              {
                 label: "贼船",
                 value:
                   "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/zeichuan.ini",
               },
               {
-                label: "布丁",
+                label: "N3RO",
                 value:
-                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/pud.ini",
+                  "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/n3ro_optimized.ini",
+              },
+              {
+                label: "Scholar",
+                value:
+                  "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/scholar_optimized.ini",
+              },
+              {
+                label: "便利店",
+                value:
+                  "https://subweb.oss-cn-hongkong.aliyuncs.com/RemoteConfig/customized/convenience.ini",
+              },
+              {
+                label: "ssrCloud",
+                value:
+                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/ssrcloud.ini",
               },
             ],
           },
