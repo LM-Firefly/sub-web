@@ -290,8 +290,8 @@ export default {
         },
         customBackend: {
           "localhost:25500 本地版": "http://localhost:25500/sub?",
-          "firefly-sub.vercel.app": "https://firefly-sub.vercel.app/sub?",
           "firefly-sub.herokuapp.com": "https://firefly-sub.herokuapp.com/sub?",
+          "firefly-sub.vercel.app": "https://firefly-sub.vercel.app/sub?",
           "sub.ccsub.site(CordCloud机场提供)": "https://subweb.ccsub.site/sub?",
           "subcon.dlj.tf(subconverter作者提供1)": "https://subcon.dlj.tf/sub?",
           "subconverter-web.now.sh": "https://subconverter-web.now.sh/sub?",
@@ -302,8 +302,8 @@ export default {
         },
         backendOptions: [
           { value: "http://localhost:25500/sub?" },
-          { value: "https://firefly-sub.vercel.app/sub?" },
           { value: "https://firefly-sub.herokuapp.com/sub?" },
+          { value: "https://firefly-sub.vercel.app/sub?" },
           { value: "https://subweb.ccsub.site/sub?" },
           { value: "https://subcon.dlj.tf/sub?" },
           { value: "https://subconverter-web.now.sh/sub?" },
