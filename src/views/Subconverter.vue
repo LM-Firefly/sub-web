@@ -697,7 +697,7 @@ export default {
   },
   mounted() {
     this.form.clientType = "clash";
-    this.form.customBackend = "https://firefly-sub.vercel.app/sub?";
+    this.form.customBackend = "https://firefly-sub.herokuapp.com/sub?";
     this.notify();
     this.form.remoteConfig =
       "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/CordCloud.ini";
