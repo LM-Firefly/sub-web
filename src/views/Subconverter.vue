@@ -295,8 +295,7 @@ export default {
           "sub.ccsub.site(CordCloud机场提供)": "https://subweb.ccsub.site/sub?",
           "subcon.dlj.tf(subconverter作者提供1)": "https://subcon.dlj.tf/sub?",
           "subconverter-web.now.sh": "https://subconverter-web.now.sh/sub?",
-          "subconverter.herokuapp.com":
-            "https://subconverter.herokuapp.com/sub?",
+          "subconverter.herokuapp.com": "https://subconverter.herokuapp.com/sub?",
           "api.dler.io(sub作者&lhie1提供-稳定)": "https://api.dler.io/sub?",
           "api.wcc.best(sub-web作者提供-稳定)": "https://api.wcc.best/sub?",
         },
