@@ -1,4 +1,4 @@
-import Vue from 'vue'
-import VueParticles from 'vue-particles'
+import Vue from "vue";
+import VueParticles from "vue-particles";
 
-Vue.use(VueParticles)
+Vue.use(VueParticles);

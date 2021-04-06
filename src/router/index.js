@@ -7,14 +7,14 @@ const routes = [
   {
     path: "*",
     name: "SubConverter",
-    component: () => import("../views/Subconverter.vue")
-  }
+    component: () => import("../views/Subconverter.vue"),
+  },
 ];
 
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
-  routes
+  routes,
 });
 
 export default router;
