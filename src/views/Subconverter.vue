@@ -292,22 +292,23 @@ export default {
           "localhost:25500 本地版": "http://localhost:25500/sub?",
           "firefly-sub.herokuapp.com": "https://firefly-sub.herokuapp.com/sub?",
           "firefly-sub.vercel.app": "https://firefly-sub.vercel.app/sub?",
+          "sub-beta.vercel.app": "https://sub-beta.vercel.app/sub?",
           "sub.ccsub.site(CordCloud机场提供)": "https://subweb.ccsub.site/sub?",
-          "subcon.dlj.tf(subconverter作者提供1)": "https://subcon.dlj.tf/sub?",
-          "subconverter-web.now.sh": "https://subconverter-web.now.sh/sub?",
-          "subconverter.herokuapp.com": "https://subconverter.herokuapp.com/sub?",
           "api.dler.io(sub作者&lhie1提供-稳定)": "https://api.dler.io/sub?",
           "api.wcc.best(sub-web作者提供-稳定)": "https://api.wcc.best/sub?",
+          "subcon.dlj.tf(subconverter作者提供1)": "https://subcon.dlj.tf/sub?",
+          "subconverter.herokuapp.com": "https://subconverter.herokuapp.com/sub?",
         },
         backendOptions: [
           { value: "http://localhost:25500/sub?" },
           { value: "https://firefly-sub.herokuapp.com/sub?" },
           { value: "https://firefly-sub.vercel.app/sub?" },
+          { value: "https://sub-beta.vercel.app/sub?" },
           { value: "https://subweb.ccsub.site/sub?" },
-          { value: "https://subcon.dlj.tf/sub?" },
-          { value: "https://subconverter-web.now.sh/sub?" },
-          { value: "https://subconverter.herokuapp.com/sub?" },
+          { value: "https://api.dler.io/sub?" }
           { value: "https://api.wcc.best/sub?" },
+          { value: "https://subcon.dlj.tf/sub?" },
+          { value: "https://subconverter.herokuapp.com/sub?" },
         ],
         remoteConfig: [
           {
@@ -446,11 +447,6 @@ export default {
                   "https://gist.github.com/jklolixxs/32d4e9a1a5d18a92beccf3be434f7966/raw/NaNoport.ini",
               },
               {
-                label: "CordCloud",
-                value:
-                  "https://gist.github.com/jklolixxs/dfbe0cf71ffc547557395c772836d9a8/raw/CordCloud.ini",
-              },
-              {
                 label: "BigAirport",
                 value:
                   "https://gist.github.com/jklolixxs/e2b0105c8be6023f3941816509a4c453/raw/BigAirport.ini",
@@ -469,11 +465,6 @@ export default {
                 label: "几鸡",
                 value:
                   "https://gist.github.com/jklolixxs/bfd5061dceeef85e84401482f5c92e42/raw/JiJi.ini",
-              },
-              {
-                label: "四季加速",
-                value:
-                  "https://gist.github.com/jklolixxs/6ff6e7658033e9b535e24ade072cf374/raw/SJ.ini",
               },
               {
                 label: "ImmTelecom",
@@ -541,76 +532,41 @@ export default {
                   "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/maying.ini",
               },
               {
-                label: "rixCloud",
-                value:
-                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/rixcloud.ini",
-              },
-              {
-                label: "YoYu",
-                value:
-                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/yoyu.ini",
-              },
-              {
                 label: "Ytoo",
                 value:
-                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/ytoo.ini",
+                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/customized/ytoo.ini"
               },
               {
-                label: "w8ves",
+                label: "FlowerCloud",
                 value:
-                  "https://raw.nameless13.com/api/public/dl/M-We_Fn7/w8ves.ini",
+                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/customized/flowercloud.ini"
               },
               {
                 label: "NyanCAT",
                 value:
-                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/nyancat.ini",
+                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/customized/nyancat.ini"
               },
               {
                 label: "Nexitally",
                 value:
-                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/nexitally.ini",
-              },
-              {
-                label: "布丁",
-                value:
-                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/pud.ini",
+                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/customized/nexitally.ini"
               },
               {
                 label: "SoCloud",
                 value:
-                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/socloud.ini",
+                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/customized/socloud.ini"
               },
               {
                 label: "ARK",
                 value:
-                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/ark.ini",
+                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/customized/ark.ini"
               },
               {
                 label: "贼船",
                 value:
-                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/zeichuan.ini",
-              },
-              {
-                label: "N3RO",
-                value:
-                  "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/n3ro_optimized.ini",
-              },
-              {
-                label: "Scholar",
-                value:
-                  "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/scholar_optimized.ini",
-              },
-              {
-                label: "便利店",
-                value:
-                  "https://subweb.oss-cn-hongkong.aliyuncs.com/RemoteConfig/customized/convenience.ini",
-              },
-              {
-                label: "ssrCloud",
-                value:
-                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/customized/ssrcloud.ini",
-              },
-            ],
+                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/customized/ssrcloud.ini"
+              }
+            ]
           },
           {
             label: "Special",
@@ -618,16 +574,16 @@ export default {
               {
                 label: "NeteaseUnblock(仅规则，No-Urltest)",
                 value:
-                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/special/netease.ini",
+                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/special/netease.ini"
               },
               {
                 label: "Basic(仅GEOIP CN + Final)",
                 value:
-                  "https://subconverter.oss-ap-southeast-1.aliyuncs.com/Rules/RemoteConfig/special/basic.ini",
-              },
-            ],
-          },
-        ],
+                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/special/basic.ini"
+              }
+            ]
+          }
+        ]
       },
       form: {
         sourceSubUrl: "",
@@ -696,7 +652,7 @@ export default {
   },
   mounted() {
     this.form.clientType = "clash";
-    this.form.customBackend = "https://firefly-sub.vercel.app/sub?";
+    this.form.customBackend = defaultBackend;
     this.notify();
     this.form.remoteConfig =
       "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/CordCloud.ini";
