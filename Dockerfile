@@ -1,5 +1,5 @@
 	# ---- Dependencies ----
-FROM node:12-alpine AS dependencies
+FROM node:lts-alpine AS dependencies
 WORKDIR /app
 COPY package.json ./
 RUN yarn install

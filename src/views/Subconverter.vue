@@ -316,9 +316,9 @@ export default {
             options: [
               {
                 label: "不选，由接口提供方提供",
-                value: "",
-              },
-            ],
+                value: ""
+              }
+            ]
           },
           {
             label: "LM-Firefly (Online, 与Github 同步)",
@@ -346,9 +346,9 @@ export default {
               {
                 label: "AIO-Classic",
                 value:
-                  "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/AIO-Classic.ini",
-              },
-            ],
+                  "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/AIO-Classic.ini"
+              }
+            ]
           },
           {
             label: "ACL4SSR (Online, 与Github 同步)",
@@ -429,9 +429,9 @@ export default {
               {
                 label: "ACL4SSR_NoReject 无广告拦截规则",
                 value:
-                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_NoReject.ini",
-              },
-            ],
+                  "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_NoReject.ini"
+              }
+            ]
           },
           {
             label: "机场定制",
@@ -647,14 +647,13 @@ export default {
 
     // 获取 url cache
     if (process.env.VUE_APP_USE_STORAGE === "true") {
-      this.form.sourceSubUrl = this.getLocalStorageItem("sourceSubUrl");
+      this.form.sourceSubUrl = this.getLocalStorageItem("sourceSubUrl")
     }
   },
   mounted() {
     this.form.clientType = "clash";
     this.form.customBackend = defaultBackend;
-    this.form.remoteConfig =
-      "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/CordCloud.ini";
+    this.form.remoteConfig = "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/CordCloud.ini";
     this.getBackendVersion();
   },
   methods: {
@@ -716,26 +715,16 @@ export default {
       sourceSub = sourceSub.replace(/(\n|\r|\n\r)/g, "|");
 
       // 薯条屏蔽
-      if (
-        sourceSub.indexOf("losadhwse") !== -1 &&
-        (backend.indexOf("py6.pw") !== -1 ||
-          backend.indexOf("subconverter-web.now.sh") !== -1 ||
-          backend.indexOf("subconverter.herokuapp.com") !== -1 ||
-          backend.indexOf("api.wcc.best") !== -1)
-      ) {
-        this.$alert(
-          "此机场订阅已将该后端屏蔽，请自建后端转换。",
-          "转换错误提示",
-          {
-            confirmButtonText: "确定",
-            callback: (action) => {
-              this.$message({
-                type: "error",
-                message: `action: ${action}`,
+      if (sourceSub.indexOf("losadhwse") !== -1 && (backend.indexOf("py6.pw") !== -1 || backend.indexOf("subconverter-web.now.sh") !== -1 || backend.indexOf("subconverter.herokuapp.com") !== -1 || backend.indexOf("api.wcc.best") !== -1)) {
+        this.$alert('此机场订阅已将该后端屏蔽，请自建后端转换。', '转换错误提示', {
+          confirmButtonText: '确定',
+          callback: action => {
+            this.$message({
+              type: 'error',
+              message: `action: ${ action }`
               });
-            },
-          }
-        );
+              }
+              });
         return false;
       }
 
@@ -828,7 +817,7 @@ export default {
       cb(results);
     },
     createFilter(queryString) {
-      return (candidate) => {
+      return candidate => {
         return (
           candidate.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
         );
@@ -839,7 +828,7 @@ export default {
         .get(
           defaultBackend.substring(0, defaultBackend.length - 5) + "/version"
         )
-        .then((res) => {
+        .then(res => {
           this.backendVersion = res.data.replace(/backend\n$/gm, "");
           this.backendVersion = this.backendVersion.replace("subconverter", "");
         });
@@ -850,33 +839,33 @@ export default {
       }
     },
     getLocalStorageItem(itemKey) {
-      const now = +new Date();
+      const now = +new Date()
       let ls = localStorage.getItem(itemKey);
 
-      let itemValue = "";
+      let itemValue = ""
       if (ls !== null) {
-        let data = JSON.parse(ls);
+        let data = JSON.parse(ls)
         if (data.expire > now) {
-          itemValue = data.value;
+          itemValue = data.value
         } else {
-          localStorage.removeItem(itemKey);
+          localStorage.removeItem(itemKey)
         }
       }
 
-      return itemValue;
+      return itemValue
     },
     setLocalStorageItem(itemKey, itemValue) {
       const ttl = process.env.VUE_APP_CACHE_TTL;
-      const now = +new Date();
+      const now = +new Date()
 
       let data = {
         setTime: now,
         ttl: parseInt(ttl),
         expire: now + ttl * 1000,
-        value: itemValue,
-      };
-      localStorage.setItem(itemKey, JSON.stringify(data));
-    },
+        value: itemValue
+      }
+      localStorage.setItem(itemKey, JSON.stringify(data))
+    }
   },
 };
 </script>
