@@ -1,19 +1,19 @@
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-require( `@/plugins/element-ui` )
-require( `@/plugins/clipboard` )
-require( `@/plugins/base64` )
-require( `@/plugins/particles` )
-require( `@/plugins/axios` )
-require( `@/plugins/device` )
+import Vue from "vue";
+import App from "./App.vue";
+import router from "./router";
+require(`@/plugins/element-ui`);
+require(`@/plugins/clipboard`);
+require(`@/plugins/base64`);
+require(`@/plugins/particles`);
+require(`@/plugins/axios`);
+require(`@/plugins/device`);
 
-import '@/icons' // icon
-import './registerServiceWorker'
+import "@/icons"; // icon
+import "./registerServiceWorker";
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
-new Vue( {
+new Vue({
   router,
-  render: ( h ) => h( App ),
-} ).$mount( '#app' )
+  render: (h) => h(App),
+}).$mount("#app");
