@@ -339,14 +339,17 @@ export default {
           "firefly-sub.up.railway.app":
             "https://firefly-sub.up.railway.app/sub?",
           "firefly-subs.onrender.com": "https://firefly-subs.onrender.com/sub?",
-          "sub.firefly-lm.workers.dev":
-            "https://sub.firefly-lm.workers.dev/sub?",
+          "railway-sub.firefly-lm.workers.dev":
+            "https://railway-sub.firefly-lm.workers.dev/sub?",
+          "render-sub.firefly-lm.workers.dev":
+            "https://render-sub.firefly-lm.workers.dev/sub?",
         },
         backendOptions: [
           { value: "http://localhost:25500/sub?" },
           { value: "https://firefly-sub.up.railway.app/sub?" },
           { value: "https://firefly-subs.onrender.com/sub?" },
-          { value: "https://sub.firefly-lm.workers.dev/sub?" },
+          { value: "https://railway-sub.firefly-lm.workers.dev/sub?" },
+          { value: "https://render-sub.firefly-lm.workers.dev/sub?" },
         ],
         remoteConfig: [
           {
@@ -365,6 +368,16 @@ export default {
                 label: "AllSub-NoReject",
                 value:
                   "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/AllSub-NoReject.toml",
+              },
+              {
+                label: "MultiSub-AdBlock",
+                value:
+                  "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/MultiSub-AdBlock.toml",
+              },
+              {
+                label: "AllSub-AdBlock",
+                value:
+                  "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/AllSub-AdBlock.toml",
               },
               {
                 label: "AIO",
