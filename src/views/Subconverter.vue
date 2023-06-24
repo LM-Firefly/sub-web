@@ -336,20 +336,20 @@ export default {
         },
         customBackend: {
           "localhost:25500 本地版": "http://localhost:25500/sub?",
+          "firefly-subs.onrender.com": "https://firefly-subs.onrender.com/sub?",
           "firefly-sub.up.railway.app":
             "https://firefly-sub.up.railway.app/sub?",
-          "firefly-subs.onrender.com": "https://firefly-subs.onrender.com/sub?",
-          "railway-sub.firefly-lm.workers.dev":
-            "https://railway-sub.firefly-lm.workers.dev/sub?",
           "render-sub.firefly-lm.workers.dev":
             "https://render-sub.firefly-lm.workers.dev/sub?",
+          "railway-sub.firefly-lm.workers.dev":
+            "https://railway-sub.firefly-lm.workers.dev/sub?",
         },
         backendOptions: [
           { value: "http://localhost:25500/sub?" },
-          { value: "https://firefly-sub.up.railway.app/sub?" },
           { value: "https://firefly-subs.onrender.com/sub?" },
-          { value: "https://railway-sub.firefly-lm.workers.dev/sub?" },
+          { value: "https://firefly-sub.up.railway.app/sub?" },
           { value: "https://render-sub.firefly-lm.workers.dev/sub?" },
+          { value: "https://railway-sub.firefly-lm.workers.dev/sub?" },
         ],
         remoteConfig: [
           {
