@@ -30,7 +30,7 @@ jobs:
           name: dist
           path: dist/
       - name: Push update to subconverter
-        if: ${{ github.ref == 'refs/heads/master' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         uses: actions/github-script@v6.4.1
         with:
           github-token: ${{ secrets.REPO_TOKEN }}
@@ -39,5 +39,5 @@ jobs:
               owner: context.repo.owner,
               repo: 'subconverter',
               workflow_id: 'sub-web.yml',
-              ref: 'master',
+              ref: 'main',
             });
