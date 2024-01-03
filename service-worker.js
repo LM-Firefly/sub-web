@@ -15,7 +15,7 @@ importScripts("js/workbox-v4.3.1/workbox-sw.js");
 workbox.setConfig({modulePathPrefix: "js/workbox-v4.3.1"});
 
 importScripts(
-  "js/precache-manifest.f6eaf7e0ce07f8a46fed0e51f0148d8e.js"
+  "js/precache-manifest.a5efba847f3ea518a90aeb407be0ecf6.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "sub-web"});
