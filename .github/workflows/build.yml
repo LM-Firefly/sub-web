@@ -13,7 +13,8 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
-
+    env:
+      GIT_TOKEN: ${{secrets.REPO_TOKEN}}
     steps:
       - uses: actions/checkout@v4.1.4
       - name: Use Node.js
@@ -33,11 +34,23 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' }}
         uses: actions/github-script@v7.0.1
         with:
-          github-token: ${{ secrets.REPO_TOKEN }}
+          github-token: ${{env.GIT_TOKEN}}
           script: |
             github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: 'subconverter',
               workflow_id: 'sub-web.yml',
               ref: 'main',
+            });
+      - name: Push update to Pages
+        if: ${{ github.ref == 'refs/heads/main' }}
+        uses: actions/github-script@v7.0.1
+        with:
+          github-token: ${{env.GIT_TOKEN}}
+          script: |
+            github.rest.actions.createWorkflowDispatch({
+            owner: context.repo.owner,
+            repo: 'sub-web',
+            workflow_id: 'pages.yml',
+            ref: 'pages',
             });
