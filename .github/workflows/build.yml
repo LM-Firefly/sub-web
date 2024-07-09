@@ -16,7 +16,7 @@ jobs:
     env:
       GIT_TOKEN: ${{secrets.REPO_TOKEN}}
     steps:
-      - uses: actions/checkout@v4.1.4
+      - uses: actions/checkout@v4.1.7
       - name: Use Node.js
         uses: actions/setup-node@v4.0.2
         with:
