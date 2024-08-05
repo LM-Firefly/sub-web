@@ -11,7 +11,7 @@
     "atob": "^2.1.2",
     "axios": "^1.6.0",
     "btoa": "^1.2.1",
-    "core-js": "^3.30.2",
+    "core-js": "^3.38.0",
     "element-ui": "^2.15.13",
     "register-service-worker": "^1.7.2",
     "vue-clipboard2": "^0.3.3",
