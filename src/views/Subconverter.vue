@@ -13,7 +13,7 @@
             </div>
           </div>
           <el-container>
-            <el-form :model=" form " label-width="80px" label-position="left" style="width: 100%">
+            <el-form :model=" form " label-width="140px" label-position="left" style="width: 100%">
               <el-form-item label="模式设置:">
                 <el-radio v-model=" advanced " label="1">基础模式</el-radio>
                 <el-radio v-model=" advanced " label="2">进阶模式</el-radio>
@@ -24,14 +24,15 @@
               </el-form-item>
               <el-form-item label="客户端项:">
                 <el-select v-model=" form.clientType " style="width: 100%">
-                  <el-option v-for="( v, k) in options.clientTypes" :key=" k " :label=" k " :value=" v "></el-option>
+                  <el-option v-for="(     v, k) in options.clientTypes" :key=" k " :label=" k " :value=" v "></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="远程配置:">
                 <el-select v-model=" form.remoteConfig " style="width: 100%" allow-create filterable
                   placeholder="请选择，或手动输入远程配置地址">
-                  <el-option-group v-for=" group in options.remoteConfig " :key=" group.label " :label=" group.label ">
-                    <el-option v-for=" item in group.options " :key=" item.value " :label=" item.label "
+                  <el-option-group v-for="     group in options.remoteConfig     " :key=" group.label "
+                    :label=" group.label ">
+                    <el-option v-for="     item in group.options     " :key=" item.value " :label=" item.label "
                       :value=" item.value "></el-option>
                   </el-option-group>
                 </el-select>
@@ -39,7 +40,8 @@
               <el-form-item label="后端地址:">
                 <el-select v-model=" form.customBackend " style="width: 100%" allow-create filterable
                   placeholder="请选择，或手动输入，需要在域名后加/sub?">
-                  <el-option v-for="( v, k) in options.customBackend" :key=" k " :label=" k " :value=" v "></el-option>
+                  <el-option v-for="(     v, k) in options.customBackend" :key=" k " :label=" k "
+                    :value=" v "></el-option>
                 </el-select>
               </el-form-item>
               <div v-if=" advanced === '2' ">
@@ -59,7 +61,16 @@
                 <el-form-item label="远程设备:">
                   <el-input v-model=" form.devid " placeholder="用于设置QuantumultX的远程设备ID" />
                 </el-form-item>
-                <el-form-item style="width: 100%">
+                <el-form-item v-for="(    param, i) in customParams" :key=" i ">
+                  <el-input slot="label" v-model=" param.name " placeholder="自定义参数名">
+                    <div slot="suffix" style="width: 10px;">:</div>
+                  </el-input>
+                  <el-input v-model=" param.value " placeholder="自定义参数内容">
+                    <el-button slot="suffix" type="text" icon="el-icon-delete" style="margin-right: 5px"
+                      @click="customParams.splice( i, 1 )" />
+                  </el-input>
+                </el-form-item>
+                <el-form-item label-width="0px" style="width: 100%">
                   <el-row type="flex">
                     <el-popover placement="bottom" v-model=" form.extraset " style="text-align: center">
                       <el-row :gutter=" 10 ">
@@ -120,6 +131,13 @@
                         <el-checkbox v-model=" form.classic " label="Classic Rule Provider"></el-checkbox>
                       </el-row>
                       <el-button slot="reference">Rule Provider 选项</el-button>
+                    </el-popover>
+                    <el-popover placement="top-end" title="添加自定义转换参数" trigger="hover">
+                      <el-link type="primary" :href=" subDocAdvanced " target="_blank"
+                        icon="el-icon-info">参考文档</el-link>
+                      <el-button slot="reference" @click=" addCustomParam " style="margin-left: 10px">
+                        <i class="el-icon-plus"></i>
+                      </el-button>
                     </el-popover>
                   </el-row>
                 </el-form-item>
@@ -402,12 +420,15 @@ export default {
           },
         },
       },
+
+      customParams: [],
       loading: false,
       customSubUrl: "",
       loadConfig: "",
       dialogLoadConfigVisible: false,
       myBot: tgBotLink,
       sampleConfig: remoteConfigSample,
+      subDocAdvanced: subDocAdvanced,
     };
     // window.console.log(data.options.remoteConfig);
     // window.console.log(data.options.customBackend);
@@ -506,6 +527,13 @@ export default {
       }
       const url = "surge://install-config?url=";
       window.open( url + this.customSubUrl );
+    },
+    addCustomParam ()
+    {
+      this.customParams.push( {
+        name: "",
+        value: "",
+      } )
     },
     makeUrl ()
     {
@@ -645,6 +673,11 @@ export default {
             this.customSubUrl += "&classic=" + this.form.classic.toString();
           }
         }
+
+        this.customParams.filter( param => param.name && param.value ).forEach( param =>
+        {
+          this.customSubUrl += `&${ encodeURIComponent( param.name ) }=${ encodeURIComponent( param.value ) }`
+        } )
       }
       this.$copyText( this.customSubUrl );
       this.$message.success( "定制订阅已复制到剪贴板" );
@@ -664,125 +697,143 @@ export default {
     },
     confirmLoadConfig ()
     {
-      // 怎么解析短链接的302和301...
-      if ( this.loadConfig.indexOf( "target" ) === -1 )
+      // Async function to handle the configuration loading
+      ( async () =>
       {
-        this.$message.error( "请输入正确的订阅地址,暂不支持短链接!" );
-        return;
-      }
-      let url;
-      try
-      {
-        url = new URL( this.loadConfig );
-      } catch ( error )
-      {
-        this.$message.error( "请输入正确的订阅地址!" );
-        return;
-      }
-      this.form.customBackend = url.origin + url.pathname + "?";
-      let param = new URLSearchParams( url.search );
-      if ( param.get( "target" ) )
-      {
-        let target = param.get( "target" );
-        if ( target === "surge" && param.get( "ver" ) )
+        try
         {
-          // 类型为surge,有ver
-          this.form.clientType = target + "&ver=" + param.get( "ver" );
-        } else if ( target === "surge" )
+          // Analyze the URL and extract its components
+          const url = new URL( await this.analyzeUrl() );
+
+          // Set the custom backend URL
+          this.form.customBackend = url.origin + url.pathname + "?";
+
+          // Parse the URL parameters
+          const params = new URLSearchParams( url.search );
+
+          // Record parameters have been read
+          const getParam = params.get.bind( params )
+          const excludeParams = new Set()
+          params.get = key =>
+          {
+            excludeParams.add( key )
+            return getParam( key )
+          }
+
+          // Get the 'target' parameter
+          const target = params.get( "target" );
+
+          // Set the client type based on the 'target' parameter
+          if ( target === "surge" )
+          {
+            const ver = params.get( "ver" ) || "4";
+            this.form.clientType = target + "&ver=" + ver;
+          } else
+          {
+            this.form.clientType = target;
+          }
+
+          // Set other form properties based on the URL parameters
+          this.form.sourceSubUrl = params.get( "url" ).replace( /\|/g, "\n" );
+          if ( param.get( "insert" ) )
+          {
+            this.form.insert = param.get( "insert" ) === "true";
+          }
+          if ( param.get( "config" ) )
+          {
+            this.form.remoteConfig = param.get( "config" );
+          }
+          if ( param.get( "exclude" ) )
+          {
+            this.form.excludeRemarks = param.get( "exclude" );
+          }
+          if ( param.get( "include" ) )
+          {
+            this.form.includeRemarks = param.get( "include" );
+          }
+          if ( param.get( "filename" ) )
+          {
+            this.form.filename = param.get( "filename" );
+          }
+          if ( param.get( "dev_id" ) )
+          {
+            this.form.devid = param.get( "dev_id" );
+          }
+          if ( param.get( "append_type" ) )
+          {
+            this.form.appendType = param.get( "append_type" ) === "true";
+          }
+          if ( param.get( "tfo" ) )
+          {
+            this.form.tfo = param.get( "tfo" ) === "true";
+          }
+          if ( param.get( "tls13" ) )
+          {
+            this.form.tls13 = param.get( "tls13" ) === "true";
+          }
+          if ( param.get( "scv" ) )
+          {
+            this.form.scv = param.get( "scv" ) === "true";
+          }
+          if ( param.get( "udp" ) )
+          {
+            this.form.udp = param.get( "udp" ) === "true";
+          }
+          if ( param.get( "xudp" ) )
+          {
+            this.form.xudp = param.get( "xudp" ) === "true";
+          }
+          if ( param.get( "sort" ) )
+          {
+            this.form.sort = param.get( "sort" ) === "true";
+          }
+          if ( param.get( "emoji" ) )
+          {
+            this.form.emoji = param.get( "emoji" ) === "true";
+          }
+          if ( param.get( "list" ) )
+          {
+            this.form.nodeList = param.get( "list" ) === "true";
+          }
+          if ( param.get( "clash.dns" ) )
+          {
+            this.form.clashdns = param.get( "clash.dns" );
+          }
+          if ( param.get( "new_name" ) )
+          {
+            this.form.new_name = param.get( "new_name" ) === "true";
+          }
+          if ( param.get( "fdn" ) )
+          {
+            this.form.fdn = param.get( "fdn" ) === "true";
+          }
+          if ( param.get( "expand" ) )
+          {
+            this.form.expand = param.get( "expand" ) === "true";
+          }
+          if ( param.get( "classic" ) )
+          {
+            this.form.classic = param.get( "classic" ) === "false";
+          }
+          this.dialogLoadConfigVisible = false;
+          // Filter custom parameters
+          this.customParams = Array.from( params
+            .entries()
+            .filter( e => !excludeParams.has( e[ 0 ] ) )
+            .map( e => ( { name: e[ 0 ], value: e[ 1 ] } ) )
+          )
+
+          // Hide the configuration dialog
+          this.dialogLoadConfigVisible = false;
+
+          // Display success message
+          this.$message.success( "长/短链接已成功解析为订阅信息" );
+        } catch ( error )
         {
-          //类型为surge,没有ver
-          this.form.clientType = target + "&ver=4";
-        } else
-        {
-          //类型为其他
-          this.form.clientType = target;
+          // Display error message if URL is not valid
+          this.$message.error( "请输入正确的订阅地址!" );
         }
-      }
-      if ( param.get( "url" ) )
-      {
-        this.form.sourceSubUrl = param.get( "url" );
-      }
-      if ( param.get( "insert" ) )
-      {
-        this.form.insert = param.get( "insert" ) === "true";
-      }
-      if ( param.get( "config" ) )
-      {
-        this.form.remoteConfig = param.get( "config" );
-      }
-      if ( param.get( "exclude" ) )
-      {
-        this.form.excludeRemarks = param.get( "exclude" );
-      }
-      if ( param.get( "include" ) )
-      {
-        this.form.includeRemarks = param.get( "include" );
-      }
-      if ( param.get( "filename" ) )
-      {
-        this.form.filename = param.get( "filename" );
-      }
-      if ( param.get( "dev_id" ) )
-      {
-        this.form.devid = param.get( "dev_id" );
-      }
-      if ( param.get( "append_type" ) )
-      {
-        this.form.appendType = param.get( "append_type" ) === "true";
-      }
-      if ( param.get( "tfo" ) )
-      {
-        this.form.tfo = param.get( "tfo" ) === "true";
-      }
-      if ( param.get( "tls13" ) )
-      {
-        this.form.tls13 = param.get( "tls13" ) === "true";
-      }
-      if ( param.get( "scv" ) )
-      {
-        this.form.scv = param.get( "scv" ) === "true";
-      }
-      if ( param.get( "udp" ) )
-      {
-        this.form.udp = param.get( "udp" ) === "true";
-      }
-      if ( param.get( "xudp" ) )
-      {
-        this.form.xudp = param.get( "xudp" ) === "true";
-      }
-      if ( param.get( "sort" ) )
-      {
-        this.form.sort = param.get( "sort" ) === "true";
-      }
-      if ( param.get( "emoji" ) )
-      {
-        this.form.emoji = param.get( "emoji" ) === "true";
-      }
-      if ( param.get( "list" ) )
-      {
-        this.form.nodeList = param.get( "list" ) === "true";
-      }
-      if ( param.get( "clash.dns" ) )
-      {
-        this.form.clashdns = param.get( "clash.dns" );
-      }
-      if ( param.get( "new_name" ) )
-      {
-        this.form.new_name = param.get( "new_name" ) === "true";
-      }
-      if ( param.get( "fdn" ) )
-      {
-        this.form.fdn = param.get( "fdn" ) === "true";
-      }
-      if ( param.get( "expand" ) )
-      {
-        this.form.expand = param.get( "expand" ) === "true";
-      }
-      if ( param.get( "classic" ) )
-      {
-        this.form.classic = param.get( "classic" ) === "false";
-      }
-      this.dialogLoadConfigVisible = false;
+      } )();
     },
     renderPost ()
     {
