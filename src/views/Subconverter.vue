@@ -13,7 +13,7 @@
             </div>
           </div>
           <el-container>
-            <el-form :model=" form " label-width="140px" label-position="left" style="width: 100%">
+            <el-form :model=" form " label-width="80px" label-position="left" style="width: 100%">
               <el-form-item label="模式设置:">
                 <el-radio v-model=" advanced " label="1">基础模式</el-radio>
                 <el-radio v-model=" advanced " label="2">进阶模式</el-radio>
@@ -24,15 +24,16 @@
               </el-form-item>
               <el-form-item label="客户端项:">
                 <el-select v-model=" form.clientType " style="width: 100%">
-                  <el-option v-for="(     v, k) in options.clientTypes" :key=" k " :label=" k " :value=" v "></el-option>
+                  <el-option v-for="(          v, k) in options.clientTypes" :key=" k " :label=" k "
+                    :value=" v "></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="远程配置:">
                 <el-select v-model=" form.remoteConfig " style="width: 100%" allow-create filterable
                   placeholder="请选择，或手动输入远程配置地址">
-                  <el-option-group v-for="     group in options.remoteConfig     " :key=" group.label "
+                  <el-option-group v-for="          group in options.remoteConfig          " :key=" group.label "
                     :label=" group.label ">
-                    <el-option v-for="     item in group.options     " :key=" item.value " :label=" item.label "
+                    <el-option v-for="          item in group.options          " :key=" item.value " :label=" item.label "
                       :value=" item.value "></el-option>
                   </el-option-group>
                 </el-select>
@@ -40,7 +41,7 @@
               <el-form-item label="后端地址:">
                 <el-select v-model=" form.customBackend " style="width: 100%" allow-create filterable
                   placeholder="请选择，或手动输入，需要在域名后加/sub?">
-                  <el-option v-for="(     v, k) in options.customBackend" :key=" k " :label=" k "
+                  <el-option v-for="(          v, k) in options.customBackend" :key=" k " :label=" k "
                     :value=" v "></el-option>
                 </el-select>
               </el-form-item>
@@ -61,16 +62,7 @@
                 <el-form-item label="远程设备:">
                   <el-input v-model=" form.devid " placeholder="用于设置QuantumultX的远程设备ID" />
                 </el-form-item>
-                <el-form-item v-for="(    param, i) in customParams" :key=" i ">
-                  <el-input slot="label" v-model=" param.name " placeholder="自定义参数名">
-                    <div slot="suffix" style="width: 10px;">:</div>
-                  </el-input>
-                  <el-input v-model=" param.value " placeholder="自定义参数内容">
-                    <el-button slot="suffix" type="text" icon="el-icon-delete" style="margin-right: 5px"
-                      @click="customParams.splice( i, 1 )" />
-                  </el-input>
-                </el-form-item>
-                <el-form-item label-width="0px" style="width: 100%">
+                <el-form-item style="width: 100%">
                   <el-row type="flex">
                     <el-popover placement="bottom" v-model=" form.extraset " style="text-align: center">
                       <el-row :gutter=" 10 ">
@@ -131,13 +123,6 @@
                         <el-checkbox v-model=" form.classic " label="Classic Rule Provider"></el-checkbox>
                       </el-row>
                       <el-button slot="reference">Rule Provider 选项</el-button>
-                    </el-popover>
-                    <el-popover placement="top-end" title="添加自定义转换参数" trigger="hover">
-                      <el-link type="primary" :href=" subDocAdvanced " target="_blank"
-                        icon="el-icon-info">参考文档</el-link>
-                      <el-button slot="reference" @click=" addCustomParam " style="margin-left: 10px">
-                        <i class="el-icon-plus"></i>
-                      </el-button>
                     </el-popover>
                   </el-row>
                 </el-form-item>
@@ -227,7 +212,7 @@ export default {
         },
         customBackend: {
           "localhost:25500/sub? 本地版": "http://localhost:25500/sub?",
-          "firefly-sub.up.railway.app/sub?": "https://firefly-sub.up.railway.app/sub?",
+          "sub.up.railway.app/sub?": "https://sub.up.railway.app/sub?",
           "sub.koyeb.app/sub?": "https://sub.koyeb.app/sub?",
           "subs-fireflylzh.b4a.run/sub?": "https://subs-fireflylzh.b4a.run/sub?",
           "railway-sub.firefly-lm.workers.dev/sub?": "https://railway-sub.firefly-lm.workers.dev/sub?",
@@ -235,7 +220,7 @@ export default {
         },
         backendOptions: [
           { value: "http://localhost:25500/sub?" },
-          { value: "https://firefly-sub.up.railway.app/sub?" },
+          { value: "https://sub.up.railway.app/sub?" },
           { value: "https://sub.koyeb.app/sub?" },
           { value: "https://subs-fireflylzh.b4a.run/sub?" },
           { value: "https://railway-sub.firefly-lm.workers.dev/sub?" },
@@ -420,15 +405,12 @@ export default {
           },
         },
       },
-
-      customParams: [],
       loading: false,
       customSubUrl: "",
       loadConfig: "",
       dialogLoadConfigVisible: false,
       myBot: tgBotLink,
       sampleConfig: remoteConfigSample,
-      subDocAdvanced: subDocAdvanced,
     };
     // window.console.log(data.options.remoteConfig);
     // window.console.log(data.options.customBackend);
@@ -527,13 +509,6 @@ export default {
       }
       const url = "surge://install-config?url=";
       window.open( url + this.customSubUrl );
-    },
-    addCustomParam ()
-    {
-      this.customParams.push( {
-        name: "",
-        value: "",
-      } )
     },
     makeUrl ()
     {
@@ -673,11 +648,6 @@ export default {
             this.customSubUrl += "&classic=" + this.form.classic.toString();
           }
         }
-
-        this.customParams.filter( param => param.name && param.value ).forEach( param =>
-        {
-          this.customSubUrl += `&${ encodeURIComponent( param.name ) }=${ encodeURIComponent( param.value ) }`
-        } )
       }
       this.$copyText( this.customSubUrl );
       this.$message.success( "定制订阅已复制到剪贴板" );
@@ -695,8 +665,59 @@ export default {
         ),
       } );
     },
+    /**
+ * Asynchronously analyzes the URL.
+ *
+ * @return {Promise<string>} The result of the analysis.
+ */
+    async analyzeUrl ()
+    {
+      // Check if `loadConfig` includes "target"
+      if ( this.loadConfig.includes( "target" ) )
+      {
+        // If it does, return `loadConfig`
+        return this.loadConfig;
+      } else
+      {
+        // Otherwise, set `loading` to true
+        this.loading = true;
+        try
+        {
+          // Fetch the data from `loadConfig` using GET method and follow redirects
+          let response = await fetch( this.loadConfig, {
+            method: "GET",
+            redirect: "follow",
+          } );
+          // Return the URL from the response
+          return response.url;
+        } catch ( e )
+        {
+          // If an error occurs, display an error message with the error details
+          this.$message.error(
+            "解析短链接失败，请检查短链接服务端是否配置跨域：" + e
+          );
+        } finally
+        {
+          // Set `loading` to false
+          this.loading = false;
+        }
+      }
+    },
+    /**
+     * Confirm and load the configuration.
+     *
+     * @return {boolean} Returns false if the 'loadConfig' is empty, otherwise returns true.
+     */
     confirmLoadConfig ()
     {
+      // Check if 'loadConfig' is empty
+      if ( this.loadConfig.trim() === "" )
+      {
+        // Display error message if 'loadConfig' is empty
+        this.$message.error( "订阅链接不能为空" );
+        return false;
+      }
+
       // Async function to handle the configuration loading
       ( async () =>
       {
@@ -734,88 +755,91 @@ export default {
           }
 
           // Set other form properties based on the URL parameters
-          this.form.sourceSubUrl = params.get( "url" ).replace( /\|/g, "\n" );
-          if ( param.get( "insert" ) )
+          if ( params.get( "url" ) )
           {
-            this.form.insert = param.get( "insert" ) === "true";
+            this.form.sourceSubUrl = params.get( "url" ).replace( /\|/g, "\n" );
           }
-          if ( param.get( "config" ) )
+          if ( params.get( "insert" ) )
           {
-            this.form.remoteConfig = param.get( "config" );
+            this.form.insert = params.get( "insert" ) === "true";
           }
-          if ( param.get( "exclude" ) )
+          if ( params.get( "config" ) )
           {
-            this.form.excludeRemarks = param.get( "exclude" );
+            this.form.remoteConfig = params.get( "config" );
           }
-          if ( param.get( "include" ) )
+          if ( params.get( "exclude" ) )
           {
-            this.form.includeRemarks = param.get( "include" );
+            this.form.excludeRemarks = params.get( "exclude" );
           }
-          if ( param.get( "filename" ) )
+          if ( params.get( "include" ) )
           {
-            this.form.filename = param.get( "filename" );
+            this.form.includeRemarks = params.get( "include" );
           }
-          if ( param.get( "dev_id" ) )
+          if ( params.get( "filename" ) )
           {
-            this.form.devid = param.get( "dev_id" );
+            this.form.filename = params.get( "filename" );
           }
-          if ( param.get( "append_type" ) )
+          if ( params.get( "dev_id" ) )
           {
-            this.form.appendType = param.get( "append_type" ) === "true";
+            this.form.devid = params.get( "dev_id" );
           }
-          if ( param.get( "tfo" ) )
+          if ( params.get( "append_type" ) )
           {
-            this.form.tfo = param.get( "tfo" ) === "true";
+            this.form.appendType = params.get( "append_type" ) === "true";
           }
-          if ( param.get( "tls13" ) )
+          if ( params.get( "tfo" ) )
           {
-            this.form.tls13 = param.get( "tls13" ) === "true";
+            this.form.tfo = params.get( "tfo" ) === "true";
           }
-          if ( param.get( "scv" ) )
+          if ( params.get( "tls13" ) )
           {
-            this.form.scv = param.get( "scv" ) === "true";
+            this.form.tls13 = params.get( "tls13" ) === "true";
           }
-          if ( param.get( "udp" ) )
+          if ( params.get( "scv" ) )
           {
-            this.form.udp = param.get( "udp" ) === "true";
+            this.form.scv = params.get( "scv" ) === "true";
           }
-          if ( param.get( "xudp" ) )
+          if ( params.get( "udp" ) )
           {
-            this.form.xudp = param.get( "xudp" ) === "true";
+            this.form.udp = params.get( "udp" ) === "true";
           }
-          if ( param.get( "sort" ) )
+          if ( params.get( "xudp" ) )
           {
-            this.form.sort = param.get( "sort" ) === "true";
+            this.form.xudp = params.get( "xudp" ) === "true";
           }
-          if ( param.get( "emoji" ) )
+          if ( params.get( "sort" ) )
           {
-            this.form.emoji = param.get( "emoji" ) === "true";
+            this.form.sort = params.get( "sort" ) === "true";
           }
-          if ( param.get( "list" ) )
+          if ( params.get( "emoji" ) )
           {
-            this.form.nodeList = param.get( "list" ) === "true";
+            this.form.emoji = params.get( "emoji" ) === "true";
           }
-          if ( param.get( "clash.dns" ) )
+          if ( params.get( "list" ) )
           {
-            this.form.clashdns = param.get( "clash.dns" );
+            this.form.nodeList = params.get( "list" ) === "true";
           }
-          if ( param.get( "new_name" ) )
+          if ( params.get( "clash.dns" ) )
           {
-            this.form.new_name = param.get( "new_name" ) === "true";
+            this.form.clashdns = params.get( "clash.dns" );
           }
-          if ( param.get( "fdn" ) )
+          if ( params.get( "new_name" ) )
           {
-            this.form.fdn = param.get( "fdn" ) === "true";
+            this.form.new_name = params.get( "new_name" ) === "true";
           }
-          if ( param.get( "expand" ) )
+          if ( params.get( "fdn" ) )
           {
-            this.form.expand = param.get( "expand" ) === "true";
+            this.form.fdn = params.get( "fdn" ) === "true";
           }
-          if ( param.get( "classic" ) )
+          if ( params.get( "expand" ) )
           {
-            this.form.classic = param.get( "classic" ) === "false";
+            this.form.expand = params.get( "expand" ) === "true";
           }
-          this.dialogLoadConfigVisible = false;
+          if ( params.get( "classic" ) )
+          {
+            this.form.classic = params.get( "classic" ) === "false";
+          }
+
           // Filter custom parameters
           this.customParams = Array.from( params
             .entries()
@@ -844,15 +868,9 @@ export default {
       data.append( "config", encodeURIComponent( this.form.remoteConfig ) );
       data.append( "exclude", encodeURIComponent( this.form.excludeRemarks ) );
       data.append( "include", encodeURIComponent( this.form.includeRemarks ) );
-      data.append(
-        "filename",
-        encodeURIComponent( this.form.filename.toString() )
-      );
+      data.append( "filename", encodeURIComponent( this.form.filename.toString() ) );
       data.append( "dev_id", encodeURIComponent( this.form.devid.toString() ) );
-      data.append(
-        "append_type",
-        encodeURIComponent( this.form.appendType.toString() )
-      );
+      data.append( "append_type", encodeURIComponent( this.form.appendType.toString() ) );
       data.append( "tfo", encodeURIComponent( this.form.tfo.toString() ) );
       data.append( "tls13", encodeURIComponent( this.form.tls13.toString() ) );
       data.append( "scv", encodeURIComponent( this.form.scv.toString() ) );
@@ -861,10 +879,7 @@ export default {
       data.append( "sort", encodeURIComponent( this.form.sort.toString() ) );
       data.append( "emoji", encodeURIComponent( this.form.emoji.toString() ) );
       data.append( "list", encodeURIComponent( this.form.nodeList.toString() ) );
-      data.append(
-        "clash.dns",
-        encodeURIComponent( this.form.clashdns.toString() )
-      );
+      data.append( "clash.dns", encodeURIComponent( this.form.clashdns.toString() ) );
       data.append( "newname", encodeURIComponent( this.form.new_name.toString() ) );
       data.append( "fdn", encodeURIComponent( this.form.fdn.toString() ) );
       data.append( "expand", encodeURIComponent( this.form.expand.toString() ) );
