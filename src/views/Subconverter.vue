@@ -24,24 +24,24 @@
               </el-form-item>
               <el-form-item label="客户端项:">
                 <el-select v-model=" form.clientType " style="width: 100%">
-                  <el-option v-for="(          v, k) in options.clientTypes" :key=" k " :label=" k "
+                  <el-option v-for="(             v, k) in options.clientTypes" :key=" k " :label=" k "
                     :value=" v "></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="远程配置:">
                 <el-select v-model=" form.remoteConfig " style="width: 100%" allow-create filterable
                   placeholder="请选择，或手动输入远程配置地址">
-                  <el-option-group v-for="          group in options.remoteConfig          " :key=" group.label "
+                  <el-option-group v-for="             group in options.remoteConfig             " :key=" group.label "
                     :label=" group.label ">
-                    <el-option v-for="          item in group.options          " :key=" item.value " :label=" item.label "
-                      :value=" item.value "></el-option>
+                    <el-option v-for="             item in group.options             " :key=" item.value "
+                      :label=" item.label " :value=" item.value "></el-option>
                   </el-option-group>
                 </el-select>
               </el-form-item>
               <el-form-item label="后端地址:">
                 <el-select v-model=" form.customBackend " style="width: 100%" allow-create filterable
                   placeholder="请选择，或手动输入，需要在域名后加/sub?">
-                  <el-option v-for="(          v, k) in options.customBackend" :key=" k " :label=" k "
+                  <el-option v-for="(             v, k) in options.customBackend" :key=" k " :label=" k "
                     :value=" v "></el-option>
                 </el-select>
               </el-form-item>
@@ -213,6 +213,7 @@ export default {
         customBackend: {
           "localhost:25500/sub? 本地版": "http://localhost:25500/sub?",
           "sub.up.railway.app/sub?": "https://sub.up.railway.app/sub?",
+          "firefly-sub.fly.dev/sub?": "https://firefly-sub.fly.dev/sub?",
           "sub.koyeb.app/sub?": "https://sub.koyeb.app/sub?",
           "subs-fireflylzh.b4a.run/sub?": "https://subs-fireflylzh.b4a.run/sub?",
           "railway-sub.firefly-lm.workers.dev/sub?": "https://railway-sub.firefly-lm.workers.dev/sub?",
@@ -221,6 +222,7 @@ export default {
         backendOptions: [
           { value: "http://localhost:25500/sub?" },
           { value: "https://sub.up.railway.app/sub?" },
+          { value: "https://firefly-sub.fly.dev/sub?" },
           { value: "https://sub.koyeb.app/sub?" },
           { value: "https://subs-fireflylzh.b4a.run/sub?" },
           { value: "https://railway-sub.firefly-lm.workers.dev/sub?" },
