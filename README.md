@@ -99,6 +99,8 @@ server {
 }
 ```
 
+> 请确保 `public/index.html` 存在，否则 Vite 构建会失败。
+
 ## Related
 
 - [tindy2013/subconverter](https://github.com/tindy2013/subconverter)
