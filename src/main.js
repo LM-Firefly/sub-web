@@ -1,19 +1,19 @@
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-require(`@/plugins/element-ui`)
-require(`@/plugins/clipboard`)
-require(`@/plugins/base64`)
-require(`@/plugins/particles`)
-require(`@/plugins/axios`)
-require(`@/plugins/device`)
+import { createApp } from 'vue'
+import '@/assets/css/notify.css';
+import App from './App.vue';
+import router from './router';
 
-import '@/icons' // icon
-import './registerServiceWorker'
+const app = createApp( App );
 
-Vue.config.productionTip = false
+// 导入并注册插件
+import initElementUI from './plugins/element-ui';
+import { registerPlugins } from './plugins';
+import initIcons from './icons'; // icon
+import './registerServiceWorker';
 
-new Vue({
-  router,
-  render: h => h(App)
-}).$mount('#app')
+app.use( router );
+initElementUI( app );
+registerPlugins( app );
+initIcons( app );
+
+app.mount( '#app' );
