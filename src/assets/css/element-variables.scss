@@ -5,9 +5,9 @@
 
 /* theme color */
 $--color-primary: #304156;
-$--color-success: #65C934;
-$--color-warning: #E6A23C;
-$--color-danger: #F56C6C;
+$--color-success: #65c934;
+$--color-warning: #e6a23c;
+$--color-danger: #f56c6c;
 // $--color-info: #1E1E1E;
 
 $--button-font-weight: 400;
@@ -17,10 +17,10 @@ $--button-font-weight: 400;
 $--border-color-light: #dfe4ed;
 $--border-color-lighter: #e6ebf5;
 
-$--table-border:1px solid#dfe6ec;
+$--table-border: 1px solid#dfe6ec;
 
 /* icon font path, required */
-$--font-path: '~element-ui/lib/theme-chalk/fonts';
+$--font-path: "~element-ui/lib/theme-chalk/fonts";
 
 @import "~element-ui/packages/theme-chalk/src/index";
 
