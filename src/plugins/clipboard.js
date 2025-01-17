@@ -1,4 +1,6 @@
-import Vue from 'vue'
-import clipboard from 'vue-clipboard2'
+import clipboard from 'vue-clipboard2';
 
-Vue.use(clipboard)
+export default ( app ) =>
+{
+    app.use( clipboard );
+};
