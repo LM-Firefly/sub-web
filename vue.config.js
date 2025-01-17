@@ -1,47 +1,81 @@
-const path = require('path')
+const path = require( "path" );
+const webpack = require( "webpack" );
 
-function resolve(dir) {
-  return path.join(__dirname, dir)
+function resolve ( dir )
+{
+  return path.join( __dirname, dir );
 }
 
 module.exports = {
+  configureWebpack: {
+    resolve: {
+      alias: {
+        '@': resolve( 'src' )
+      }
+    },
+    plugins: [
+      new webpack.DefinePlugin( {
+        __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify( true )
+      } )
+    ]
+  },
+  lintOnSave: false,
+  publicPath: "./",
   css: {
     loaderOptions: {
       less: {
-        javascriptEnabled: true
-      }
-    }
+        javascriptEnabled: true,
+      },
+    },
   },
-
-  chainWebpack: config => {
-    // set svg-sprite-loader
+  chainWebpack: ( config ) =>
+  {
+    config.module.rule( "svg" ).exclude.add( resolve( "src/icons" ) ).end();
     config.module
-      .rule('svg')
-      .exclude.add(resolve('src/icons'))
+      .rule( "icons" )
+      .test( /\.svg$/ )
+      .include.add( resolve( "src/icons" ) )
       .end()
-    config.module
-      .rule('icons')
-      .test(/\.svg$/)
-      .include.add(resolve('src/icons'))
-      .end()
-      .use('svg-sprite-loader')
-      .loader('svg-sprite-loader')
-      .options({
-        symbolId: 'icon-[name]'
-      })
-      .end()
+      .use( "svg-sprite-loader" )
+      .loader( "svg-sprite-loader" )
+      .options( {
+        symbolId: "icon-[name]",
+      } )
+      .end();
   },
-
   pwa: {
     workboxOptions: {
-      // https://developers.google.com/web/tools/workbox/modules/workbox-webpack-plugin
       skipWaiting: true,
       clientsClaim: true,
       importScripts: [
-        'https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox-sw.js'
+        "https://storage.googleapis.com/workbox-cdn/releases/7.3.0/workbox-sw.js",
       ],
-      navigateFallback: '/',
-      navigateFallbackDenylist: [/\/api\//]
-    }
-  }
+      navigateFallback: "/",
+      navigateFallbackDenylist: [ /\/api\// ],
+      runtimeCaching: [
+        {
+          urlPattern: /\.(?:png|jpg|jpeg|svg)$/,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'images',
+            expiration: {
+              maxEntries: 50,
+              maxAgeSeconds: 30 * 24 * 60 * 60 // 30天
+            }
+          }
+        },
+        {
+          urlPattern: /\.(?:js|css)$/,
+          handler: 'StaleWhileRevalidate',
+          options: {
+            cacheName: 'static-resources',
+            expiration: {
+              maxEntries: 60,
+              maxAgeSeconds: 20 * 24 * 60 * 60 // 20天
+            }
+          }
+        }
+      ]
+    },
+  },
 };

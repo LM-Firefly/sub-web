@@ -1,20 +1,17 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-
-Vue.use(VueRouter);
+import { createRouter, createWebHistory } from 'vue-router';
+import Subconverter from '../views/Subconverter.vue';
 
 const routes = [
   {
-    path: "/",
-    name: "SubConverter",
-    component: () => import("../views/Subconverter.vue")
-  }
+    path: '/',
+    name: 'SubConverter',
+    component: Subconverter,
+  },
 ];
 
-const router = new VueRouter({
-  mode: "history",
-  base: process.env.BASE_URL,
-  routes
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
+  routes,
 });
 
 export default router;
