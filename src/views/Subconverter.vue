@@ -3,755 +3,837 @@
     <el-row style="margin-top: 10px">
       <el-col>
         <el-card>
-          <div slot="header">
-            Subscription Converter
+          <template #header>
+            <span class="brand-name">Firefly-SubConverter</span>
             <svg-icon icon-class="github" style="margin-left: 20px" @click="goToProject" />
-
-            <div style="display: inline-block; position:absolute; right: 20px">{{ backendVersion }}</div>
-          </div>
+            <svg-icon icon-class="telegram" style="margin-left: 20px" @click="gotoTgChannel" />
+            <svg-icon icon-class="clash" style="margin-left: 20px" @click="gotoGayhubRuleset" />
+            <div style="font-style: normal; font-size: 80%; text-align: right; margin-top: 5px;">{{ backendVersion }}
+            </div>
+          </template>
           <el-container>
-            <el-form :model="form" label-width="140px" label-position="left" style="width: 100%">
+            <el-form :model=" form " label-width="90px" label-position="left"
+              style="width: 100%; align-content: center;" class="sub-form">
               <el-form-item label="模式设置:">
-                <el-radio v-model="advanced" label="1">基础模式</el-radio>
-                <el-radio v-model="advanced" label="2">进阶模式</el-radio>
+                <el-radio v-model=" advanced " label="1">基础模式</el-radio>
+                <el-radio v-model=" advanced " label="2">进阶模式</el-radio>
               </el-form-item>
               <el-form-item label="订阅链接:">
-                <el-input v-model="form.sourceSubUrl" type="textarea" rows="3"
-                  placeholder="支持订阅或ss/ssr/vmess链接，多个链接每行一个或用 | 分隔" @blur="saveSubUrl" />
+                <el-input v-model=" form.sourceSubUrl " style="width: 100%" type="textarea" :rows=" 4 "
+                  placeholder="支持各种订阅链接或单节点链接，多个链接每行一个或用 | 分隔" @blur=" saveSubUrl " />
               </el-form-item>
-              <el-form-item label="客户端:">
-                <el-select v-model="form.clientType" style="width: 100%">
-                  <el-option v-for="(v, k) in options.clientTypes" :key="k" :label="k" :value="v"></el-option>
+              <el-form-item label="客户端项:">
+                <el-select v-model=" form.clientType " style="width: 100%">
+                  <el-option v-for=" ( v, k ) in options.clientTypes " :key=" k " :label=" k " :value=" v " />
                 </el-select>
               </el-form-item>
-
-              <div v-if="advanced === '2'">
-                <el-form-item label="后端地址:">
-                  <el-autocomplete style="width: 100%" v-model="form.customBackend" :fetch-suggestions="backendSearch"
-                    placeholder="动动小手，（建议）自行搭建后端服务。例：http://127.0.0.1:25500/sub?">
-                    <el-button slot="append" @click="gotoGayhub" icon="el-icon-link">前往项目仓库</el-button>
-                  </el-autocomplete>
+              <el-form-item label="远程配置:">
+                <el-select v-model=" form.remoteConfig " style="width: 100%" allow-create filterable
+                  placeholder="默认不选，使用后端默认pref配置">
+                    <el-link slot="append" @click=" gotoRemoteConfig " style="margin-left: 20px"><el-icon><InfoFilled /></el-icon>远程配置示例</el-link>
+                  <el-option-group label-position="left" style="width: 100%" v-for=" group in options.remoteConfig "
+                    :key=" group.label " :label=" group.label ">
+                    <el-option v-for=" item in group.options " :key=" item.value " :label=" item.label "
+                      :value=" item.value " />
+                  </el-option-group>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="后端地址:">
+                <el-select v-model=" form.customBackend " style="width: 100%" allow-create filterable>
+                    <el-link slot="append" @click=" gotoGayhub " style="margin-left: 20px"><el-icon><InfoFilled /></el-icon>Docker快速部署Demo，前往项目仓库</el-link>
+                  <el-option v-for=" ( v, k ) in options.customBackend " :key=" k " :label=" k " :value=" v " />
+                </el-select>
+              </el-form-item>
+              <div v-if=" advanced === '2' ">
+                <el-form-item label="包含节点:">
+                  <el-input v-model=" form.includeRemarks " style="width: 100%" placeholder="包含有关键字的节点，支持正则" />
                 </el-form-item>
-                <el-form-item label="远程配置:">
-                  <el-select v-model="form.remoteConfig" allow-create filterable placeholder="请选择" style="width: 100%">
-                    <el-option-group v-for="group in options.remoteConfig" :key="group.label" :label="group.label">
-                      <el-option v-for="item in group.options" :key="item.value" :label="item.label"
-                        :value="item.value"></el-option>
-                    </el-option-group>
-                    <el-button slot="append" @click="gotoRemoteConfig" icon="el-icon-link">配置示例</el-button>
+                <el-form-item label="排除节点:">
+                  <el-input v-model=" form.excludeRemarks " style="width: 100%" placeholder="不包含有关键字的节点，支持正则" />
+                </el-form-item>
+                <el-form-item label="输出文件名:">
+                  <el-input v-model=" form.filename " style="width: 100%" placeholder="返回的订阅文件名" />
+                </el-form-item>
+                <el-form-item label="Clash.TUN:">
+                  <el-select v-model=" form.clashdns " style="width: 100%" allow-create filterable
+                    placeholder="默认不开启TUN/TAP">
+                    <el-option v-for=" ( v, k ) in options.clashdns " :key=" k " :label=" k " :value=" v "></el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="Include:">
-                  <el-input v-model="form.includeRemarks" placeholder="节点名包含的关键字，支持正则" />
+                <el-form-item label="远程设备:">
+                  <el-input v-model=" form.devid " placeholder="用于设置QuantumultX的远程设备ID" />
                 </el-form-item>
-                <el-form-item label="Exclude:">
-                  <el-input v-model="form.excludeRemarks" placeholder="节点名不包含的关键字，支持正则" />
+                <el-form-item v-for=" ( param, i ) in customParams " :key=" i "
+                  style="display: flex; align-items: left; margin-bottom: 10px">
+                  <el-input v-model=" param.name " placeholder="自定义参数名"
+                    style="width: 100px; margin-left: -90px; margin-right: 5px"></el-input>
+                  <span style="margin-right: 5px">:</span>
+                  <el-input v-model=" param.value " placeholder="自定义参数内容" style="flex: 1; margin-right: 5px"></el-input>
+                  <el-button @click="customParams.splice( i, 1 )"><el-icon><Delete /></el-icon></el-button>
                 </el-form-item>
-                <el-form-item label="FileName:">
-                  <el-input v-model="form.filename" placeholder="返回的订阅文件名" />
-                </el-form-item>
-
-                <el-form-item v-for="(param, i) in customParams" :key="i">
-                  <el-input slot="label" v-model="param.name" placeholder="自定义参数名">
-                    <div slot="suffix" style="width: 10px;">:</div>
-                  </el-input>
-                  <el-input v-model="param.value" placeholder="自定义参数内容">
-                      <el-button slot="suffix" type="text" icon="el-icon-delete" style="margin-right: 5px" @click="customParams.splice(i, 1)"/>
-                  </el-input>
-                </el-form-item>
-
-                <el-form-item label-width="0px">
-                  <el-row type="flex">
-                    <el-col>
-                      <el-checkbox v-model="form.nodeList" label="输出为 Node List" border></el-checkbox>
-                    </el-col>
-                    <el-popover placement="bottom" v-model="form.extraset">
-                      <el-row>
-                        <el-checkbox v-model="form.emoji" label="Emoji"></el-checkbox>
-                      </el-row>
-                      <el-row>
-                        <el-checkbox v-model="form.scv" label="跳过证书验证"></el-checkbox>
-                      </el-row>
-                      <el-row>
-                        <el-checkbox v-model="form.udp" @change="needUdp = true" label="启用 UDP"></el-checkbox>
-                      </el-row>
-                      <el-row>
-                        <el-checkbox v-model="form.appendType" label="节点类型"></el-checkbox>
-                      </el-row>
-                      <el-row>
-                        <el-checkbox v-model="form.sort" label="排序节点"></el-checkbox>
-                      </el-row>
-                      <el-row>
-                        <el-checkbox v-model="form.fdn" label="过滤非法节点"></el-checkbox>
-                      </el-row>
-                      <el-row>
-                        <el-checkbox v-model="form.expand" label="规则展开"></el-checkbox>
-                      </el-row>
-                      <el-button slot="reference">更多选项</el-button>
-                    </el-popover>
-                    <el-popover placement="bottom" style="margin-left: 10px">
-                      <el-row>
-                        <el-checkbox v-model="form.tpl.surge.doh" label="Surge.DoH"></el-checkbox>
-                      </el-row>
-                      <el-row>
-                        <el-checkbox v-model="form.tpl.clash.doh" label="Clash.DoH"></el-checkbox>
-                      </el-row>
-                      <el-row>
-                        <el-checkbox v-model="form.insert" label="网易云"></el-checkbox>
-                      </el-row>
-                      <el-button slot="reference">定制功能</el-button>
-                    </el-popover>
-                    <el-popover placement="top-end" title="添加自定义转换参数" trigger="hover">
-                      <el-link type="primary" :href="subDocAdvanced" target="_blank" icon="el-icon-info">参考文档</el-link>
-                      <el-button slot="reference" @click="addCustomParam" style="margin-left: 10px">
-                        <i class="el-icon-plus"></i>
-                      </el-button>
-                    </el-popover>
+                <el-form-item style="width: 100%; text-align: center" label-width="0px">
+                  <el-row type="flex" justify="center">
+                    <el-button-group>
+                      <el-popover placement="bottom" v-model="form.extraset" style="text-align: center; min-width: 600px;">
+                        <el-row :gutter="10">
+                          <el-checkbox v-model="form.new_name" label="Clash新字段"></el-checkbox>
+                          <el-checkbox v-model="form.emoji" label="Emoji"></el-checkbox>
+                          <el-checkbox v-model="form.appendType" label="节点类型"></el-checkbox>
+                          <el-checkbox v-model="form.sort" label="排序节点"></el-checkbox>
+                          <el-checkbox v-model="form.fdn" label="过滤非法节点"></el-checkbox>
+                          <el-checkbox v-model="form.nodeList" label="输出为 Node List"></el-checkbox>
+                          <el-checkbox v-model="form.tls13" label="开启TLS_1.3"></el-checkbox>
+                          <el-checkbox v-model="form.insert" label="插入默认节点"></el-checkbox>
+                        </el-row>
+                        <template #reference>
+                          <el-button><el-icon><Operation /></el-icon>全局字段</el-button>
+                        </template>
+                      </el-popover>
+                      <el-popover placement="bottom" v-model="form.extraset" style="text-align: center; min-width: 600px;">
+                        <el-row :gutter="10">
+                          <el-checkbox v-model="form.udp" label="启用 UDP"></el-checkbox>
+                          <el-checkbox v-model="form.tfo" label="TCP Fast Open"></el-checkbox>
+                          <el-checkbox v-model="form.scv" label="Skip Cert Verify"></el-checkbox>
+                          <el-checkbox v-model="form.xudp" label="启用 XUDP"></el-checkbox>
+                        </el-row>
+                        <template #reference>
+                          <el-button><el-icon><Setting /></el-icon>节点字段</el-button>
+                        </template>
+                      </el-popover>
+                      <el-popover placement="bottom" v-model="form.rule" style="text-align: center; min-width: 200px;">
+                        <el-row :gutter="10">
+                          <el-checkbox v-model="form.expand" label="展开规则"></el-checkbox>
+                        </el-row>
+                        <el-row :gutter="10">
+                          <el-checkbox v-model="form.classic" label="Classic Rule-Providers" style="white-space: normal"></el-checkbox>
+                        </el-row>
+                        <template #reference>
+                          <el-button><el-icon><Expand /></el-icon>Rule-Providers</el-button>
+                        </template>
+                      </el-popover>
+                      <el-popover placement="top-end" title="添加自定义转换参数" trigger="hover">
+                        <el-link type="primary" :href="subDocAdvanced" target="_blank"><el-icon><InfoFilled /></el-icon>参考文档</el-link>
+                        <template #reference>
+                          <el-button @click="addCustomParam"><el-icon><Plus /></el-icon></el-button>
+                        </template>
+                      </el-popover>
+                    </el-button-group>
                   </el-row>
                 </el-form-item>
               </div>
-
               <div style="margin-top: 50px"></div>
-
-              <el-divider content-position="center">
-                <i class="el-icon-magic-stick"></i>
-              </el-divider>
-
-              <el-form-item label="定制订阅:">
+              <el-divider content-position="center"><el-icon><MagicStick /></el-icon></el-divider>
+              <el-form-item label="定制订阅:" label-width="90px" label-position="left" style="width: 100%">
                 <el-input class="copy-content" disabled v-model="customSubUrl">
-                  <el-button slot="append" v-clipboard:copy="customSubUrl" v-clipboard:success="onCopy" ref="copy-btn"
-                    icon="el-icon-document-copy">复制</el-button>
+                  <template #append>
+                    <el-button @click="copyToClipboard(customSubUrl)" ref="copy-btn"><el-icon><DocumentCopy /></el-icon>复制</el-button>
+                  </template>
                 </el-input>
               </el-form-item>
-              <el-form-item label="订阅短链:">
-                <el-input class="copy-content" disabled v-model="curtomShortSubUrl">
-                  <el-button slot="append" v-clipboard:copy="curtomShortSubUrl" v-clipboard:success="onCopy"
-                    ref="copy-btn" icon="el-icon-document-copy">复制</el-button>
-                </el-input>
-              </el-form-item>
-
-              <el-form-item label-width="0px" style="margin-top: 40px; text-align: center">
-                <el-button style="width: 140px" type="danger" @click="makeUrl"
-                  :disabled="form.sourceSubUrl.length === 0">生成订阅链接</el-button>
-                <el-button style="width: 140px" type="danger" @click="makeShortUrl" :loading="loading"
-                  :disabled="customSubUrl.length === 0">生成短链接</el-button>
-                <!-- <el-button style="width: 140px" type="primary" @click="surgeInstall" icon="el-icon-connection">一键导入Surge</el-button> -->
-              </el-form-item>
-
-              <el-form-item label-width="0px" style="text-align: center">
-                <el-button style="width: 140px" type="primary" @click="dialogUploadConfigVisible = true"
-                  icon="el-icon-upload" :loading="loading">上传配置</el-button>
-                <el-button style="width: 140px" type="primary" @click="clashInstall" icon="el-icon-connection"
-                  :disabled="customSubUrl.length === 0">一键导入 Clash</el-button>
-              </el-form-item>
-              <el-form-item label-width="0px" style="text-align: center">
-                <el-button style="width: 290px" type="primary" @click="dialogLoadConfigVisible = true"
-                  icon="el-icon-copy-document" :loading="loading">从 URL 解析</el-button>
-              </el-form-item>
+              <div style="margin-top: 20px; display: flex; justify-content: center;">
+                <el-row type="flex" justify="center">
+                  <el-col :span="24" style="text-align: center">
+                    <el-button style="width: 120px;" type="danger" @click="makeUrl" :disabled="form.sourceSubUrl.length===0"><el-icon><Document /></el-icon>生成订阅链接</el-button>
+                    <el-button style="width: 120px; margin-left: 10px" type="danger" @click="clashInstall" :disabled="customSubUrl.length===0"><el-icon><DocumentChecked /></el-icon>一键导入Clash</el-button>
+                    <!-- <el-button style="width: 144px;" type="primary" @click="surgeInstall" icon="el-icon-connection">一键导入Surge</el-button> -->
+                  </el-col>
+                  <el-row>
+                    <el-button style="width: 250px; margin-top: 10px;" type="primary" @click="openLoadConfigDialog" :loading="loading"><el-icon><Link /></el-icon>从URL解析</el-button>
+                  </el-row>
+                </el-row>
+              </div>
             </el-form>
           </el-container>
         </el-card>
       </el-col>
     </el-row>
-
-    <el-dialog :visible.sync="dialogUploadConfigVisible" :show-close="false" :close-on-click-modal="false"
-      :close-on-press-escape="false" width="700px">
-      <div slot="title">
-        Remote config upload
-        <el-popover trigger="hover" placement="right" style="margin-left: 10px">
-          <el-link type="primary" :href="sampleConfig" target="_blank" icon="el-icon-info">参考配置</el-link>
-          <i class="el-icon-question" slot="reference"></i>
-        </el-popover>
-      </div>
-      <el-form label-position="left">
+    <el-dialog v-model=" dialogLoadConfigVisible " :show-close=" false " :close-on-click-modal=" false "
+      :close-on-press-escape=" false " width="80vw" style="max-width: 100%;">
+      <template #header>可以从老的订阅信息中解析信息,填入页面中去</template>
+      <el-form label-position="left" style="width: 100%">
         <el-form-item prop="uploadConfig">
-          <el-input v-model="uploadConfig" type="textarea" :autosize="{ minRows: 15, maxRows: 30 }" maxlength="10000"
-            show-word-limit></el-input>
+          <el-input v-model=" loadConfig " type="textarea" :autosize=" { minRows: 15, maxRows: 30 } " maxlength="10000" show-word-limit></el-input>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="uploadConfig = ''; dialogUploadConfigVisible = false">取 消</el-button>
-        <el-button type="primary" @click="confirmUploadConfig" :disabled="uploadConfig.length === 0">确 定</el-button>
-      </div>
+      <template #footer>
+        <el-button @click=" loadConfig = ''; dialogLoadConfigVisible = false;">取 消</el-button>
+        <el-button type="primary" @click=" confirmLoadConfig " :disabled=" loadConfig.length === 0 ">确 定</el-button>
+      </template>
     </el-dialog>
-
-    <el-dialog :visible.sync="dialogLoadConfigVisible" :show-close="false" :close-on-click-modal="false"
-      :close-on-press-escape="false" width="700px">
-      <div slot="title">
-        解析 Subconverter 链接
-      </div>
-      <el-form label-position="left" :inline="true" >
-        <el-form-item prop="uploadConfig" label="订阅链接：" label-width="85px">
-          <el-input v-model="loadConfig" style="width: 565px"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="loadConfig = ''; dialogLoadConfigVisible = false">取 消</el-button>
-        <el-button type="primary" @click="confirmLoadConfig" :disabled="loadConfig.length === 0">确 定</el-button>
-      </div>
-    </el-dialog>
-
   </div>
 </template>
 
 <script>
-const project = process.env.VUE_APP_PROJECT
-const remoteConfigSample = process.env.VUE_APP_SUBCONVERTER_REMOTE_CONFIG
-const subDocAdvanced = process.env.VUE_APP_SUBCONVERTER_DOC_ADVANCED
-const gayhubRelease = process.env.VUE_APP_BACKEND_RELEASE
-const defaultBackend = process.env.VUE_APP_SUBCONVERTER_DEFAULT_BACKEND + '/sub?'
-const shortUrlBackend = process.env.VUE_APP_MYURLS_API
-const configUploadBackend = process.env.VUE_APP_CONFIG_UPLOAD_API
-const tgBotLink = process.env.VUE_APP_BOT_LINK
-
-export default {
-  data() {
-    return {
-      backendVersion: "",
-      advanced: "2",
-
-      // 是否为 PC 端
-      isPC: true,
-
-      options: {
-        clientTypes: {
-          Clash: "clash",
-          Surge: "surge&ver=4",
-          Quantumult: "quan",
-          QuantumultX: "quanx",
-          Mellow: "mellow",
-          Surfboard: "surfboard",
-          Loon: "loon",
-          singbox: "singbox",
-          ss: "ss",
-          ssd: "ssd",
-          sssub: "sssub",
-          ssr: "ssr",
-          ClashR: "clashr",          
-          V2Ray: "v2ray",
-          Trojan: "trojan",
-          Surge3: "surge&ver=3",
+  const project = import.meta.env.VITE_PROJECT;
+  const remoteConfigSample = import.meta.env.VITE_SUBCONVERTER_REMOTE_CONFIG;
+  const gayhubSource = import.meta.env.VITE_BACKEND;
+  const gayhubRuleset = import.meta.env.VITE_RULESET_LINK;
+  const defaultBackend = import.meta.env.VITE_SUBCONVERTER_DEFAULT_BACKEND + "/sub?";
+  const tgBotLink = import.meta.env.VITE_BOT_LINK;
+  const subDocAdvanced = import.meta.env.VITE_SUBCONVERTER_DOC_ADVANCED;
+  export default {
+    data ()
+    {
+      var data = {
+        backendVersion: "",
+        advanced: "1",
+        // 是否为 PC 端
+        isPC: true,
+        // 定义所有布尔类型表单字段
+        booleanFields: [
+          'appendType', 'emoji', 'tls13', 'fdn', 'nodeList', 'sort',
+          'scv', 'tfo', 'udp', 'xudp', 'new_name', 'expand', 'classic'
+        ],
+        options: {
+          clientTypes: {
+            Clash: "clash",
+            Surge: "surge&ver=4",
+            Surge3: "surge&ver=3",
+            Quantumult: "quan",
+            QuantumultX: "quanx",
+            Singbox: "singbox",
+            Loon: "loon",
+            Surfboard: "surfboard",
+            "Shadowsocks(SIP002)": "ss",
+            "Shadowsocks(SIP008)": "sssub",
+            Mellow: "mellow",
+            ShadowsocksR: "ssr",
+            ShadowsocksD: "ssd",
+            Surge2: "surge&ver=2",
+            V2Ray: "v2ray",
+            Trojan: "trojan",
+            "混合订阅（mixed）": "mixed",
+            自动判断客户端: "auto",
+          },
+          customBackend: {
+            "localhost:25500/sub? 本地版": "http://localhost:25500/sub?",
+            "fly-sub.fly.dev/sub?": "https://fly-sub.fly.dev/sub?",
+            "sub.koyeb.app/sub?": "https://sub.koyeb.app/sub?",
+            "render-sub.onrender.com/sub?": "https://render-sub.onrender.com/sub?",
+            "flysub.firefly-lm.workers.dev/sub?": "https://flysub.firefly-lm.workers.dev/sub?",
+            "sub.firefly-lm.workers.dev/sub?": "https://sub.firefly-lm.workers.dev/sub?",
+            "rensub.firefly-lm.workers.dev/sub?": "https://rensub.firefly-lm.workers.dev/sub?",
+          },
+          clashdns: {
+            "默认不开启TUN/TAP": "",
+            tap: "tap",
+            "win-tun": "win-tun",
+            "linux-tun": "linux-tun",
+            "meta-tun": "meta-tun",
+          },
+          remoteConfig: [
+            { label: "默认", options: [ { label: "默认不选，使用后端默认pref配置", value: "" } ] },
+            {
+              label: "LM-Firefly (Online, 与Github 同步)",
+              options: [
+                { label: "MultiSub-NoReject", value: "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/MultiSub-NoReject.toml" },
+                { label: "AllSub-NoReject", value: "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/AllSub-NoReject.toml" },
+                { label: "MultiSub-AdBlock", value: "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/MultiSub-AdBlock.toml" },
+                { label: "AllSub-AdBlock", value: "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/AllSub-AdBlock.toml" },
+                { label: "AIO", value: "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/AIO.toml" },
+                { label: "AIO-NoReject", value: "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/AIO-NoReject.toml" },
+                { label: "CordCloud", value: "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/CordCloud.toml" },
+                { label: "CordCloud-NoReject", value: "https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/CordCloud-NoReject.toml" }
+              ]
+            },
+            {
+              label: "ACL4SSR (Online, 与Github 同步)",
+              options: [
+                { label: "ACL4SSR 默认版 分组比较全", value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online.ini" },
+                { label: "ACL4SSR 更多去广告", value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_AdblockPlus.ini" },
+                { label: "ACL4SSR 全分组 自动测速、故障转移、负载均衡", value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_MultiMode.ini" },
+                { label: "ACL4SSR 全分组 重度用户使用", value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full.ini" },
+                { label: "ACL4SSR 全分组 重度用户使用 更多去广告", value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_AdblockPlus.ini" },
+                { label: "ACL4SSR 全分组 重度用户使用 奈飞全量", value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_Netflix.ini" },
+                { label: "ACL4SSR 全分组 无自动测速 重度用户使用", value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_NoAuto.ini" },
+                { label: "ACL4SSR 精简版", value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini.ini" },
+                { label: "ACL4SSR 精简版 带港美日国家", value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_MultiCountry.ini" },
+                { label: "ACL4SSR 精简版 更多去广告", value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_AdblockPlus.ini" },
+                { label: "ACL4SSR 精简版 带故障转移", value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_Fallback.ini" },
+                { label: "ACL4SSR 精简版 自动测速、故障转移、负载均衡", value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_MultiMode.ini" },
+                { label: "ACL4SSR 精简版 不带自动测速", value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_NoAuto.ini" },
+                { label: "ACL4SSR 无自动测速", value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_NoAuto.ini" },
+                { label: "ACL4SSR 无广告拦截规则", value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_NoReject.ini" }
+              ]
+            },
+            {
+              label: "Special",
+              options: [
+                { label: "NeteaseUnblock(仅规则，No-Urltest)", value: "https://raw.githubusercontent.com/SleepyHeeead/subconverter-config/master/remote-config/special/netease.ini" },
+                { label: "Basic(仅GEOIP CN + Final)", value: "https://raw.githubusercontent.com/SleepyHeeead/subconverter-config/master/remote-config/special/basic.ini" }
+              ]
+            },
+          ],
         },
-        backendOptions: [{ value: "http://127.0.0.1:25500/sub?" }],
-        remoteConfig: [
+        extrasetVisible: false,
+        ruleVisible: false,
+        form: {
+          appendType: false,
+          clashdns: "", // 选择base.tpl 里面Clash DNS区块
+          classic: false, // 是否使用 Clash Classic Rule Provider
+          clientType: "",
+          customBackend: "",
+          emoji: true,
+          excludeRemarks: "",
+          expand: true, // 是否展开规则
+          tls13: false,
+          fdn: false,
+          filename: "",
+          devid: "",
+          includeRemarks: "",
+          insert: false, // 是否插入默认订阅的节点，对应配置项 insert_url
+          new_name: true, // 是否使用 Clash 新字段
+          nodeList: false,
+          remoteConfig: "",
+          scv: false,
+          sort: false,
+          sourceSubUrl: "",
+          tfo: false,
+          udp: false,
+          xudp: false,
+        },
+        customParams: [],
+        loading: false,
+        customSubUrl: "",
+        loadConfig: "",
+        dialogLoadConfigVisible: false,
+        myBot: tgBotLink,
+        sampleConfig: remoteConfigSample,
+        subDocAdvanced: subDocAdvanced,
+      };
+      let phoneUserAgent =
+        /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          navigator.userAgent
+        );
+      if ( phoneUserAgent )
+      {
+        let acl4ssrConfig = data.options.remoteConfig[ 1 ].options;
+        for ( let i = 0; i < acl4ssrConfig.length; i++ )
+        {
+          if ( acl4ssrConfig[ i ].label.length > 10 )
           {
-            label: "universal",
-            options: [
-              {
-                label: "No-Urltest",
-                value:
-                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/universal/no-urltest.ini"
-              },
-              {
-                label: "Urltest",
-                value:
-                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/universal/urltest.ini"
-              }
-            ]
-          },
-          {
-            label: "customized",
-            options: [
-              {
-                label: "Maying",
-                value:
-                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/customized/maying.ini"
-              },
-              {
-                label: "Ytoo",
-                value:
-                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/customized/ytoo.ini"
-              },
-              {
-                label: "FlowerCloud",
-                value:
-                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/customized/flowercloud.ini"
-              },
-              {
-                label: "Nexitally",
-                value:
-                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/customized/nexitally.ini"
-              },
-              {
-                label: "SoCloud",
-                value:
-                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/customized/socloud.ini"
-              },
-              {
-                label: "ARK",
-                value:
-                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/customized/ark.ini"
-              },
-              {
-                label: "ssrCloud",
-                value:
-                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/customized/ssrcloud.ini"
-              }
-            ]
-          },
-          {
-            label: "Special",
-            options: [
-              {
-                label: "NeteaseUnblock(仅规则，No-Urltest)",
-                value:
-                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/special/netease.ini"
-              },
-              {
-                label: "Basic(仅GEOIP CN + Final)",
-                value:
-                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/special/basic.ini"
-              }
-            ]
+            acl4ssrConfig[ i ].label = acl4ssrConfig[ i ].label.replace( /\s.*/, "" );
           }
-        ]
-      },
-      form: {
-        sourceSubUrl: "",
-        clientType: "",
-        customBackend: "",
-        remoteConfig: "",
-        excludeRemarks: "",
-        includeRemarks: "",
-        filename: "",
-        emoji: true,
-        nodeList: false,
-        extraset: false,
-        sort: false,
-        udp: false,
-        tfo: false,
-        scv: true,
-        fdn: false,
-        expand: true,
-        appendType: false,
-        insert: false, // 是否插入默认订阅的节点，对应配置项 insert_url
-        new_name: true, // 是否使用 Clash 新字段
+        }
+        var serverList = {};
+        let serverKeys = Object.keys( data.options.customBackend );
+        for ( let i = 0; i < serverKeys.length; i++ )
+        {
+          let key = serverKeys[ i ].replace( /\(.*/, "" );
+          serverList[ key ] = data.options.customBackend[ serverKeys[ i ] ];
+        }
+        data.options.customBackend = serverList;
+      }
+      return data;
+    },
+    created ()
+    {
+      document.title = "Firefly-SubConverter";
+      this.isPC = this.$getOS().isPc;
+      if ( import.meta.env.VITE_USE_STORAGE === "true" )
+      {
+        this.form.sourceSubUrl = this.getLocalStorageItem( "sourceSubUrl" );
+      }
+    },
+    mounted ()
+    {
+      this.form.clientType = "clash";
+      this.form.customBackend = defaultBackend;
+      this.form.remoteConfig = "";
+      this.form.clashdns = "";
+      this.notify();
+      this.getBackendVersion();
+    },
 
-        // tpl 定制功能
-        tpl: {
-          surge: {
-            doh: false // dns 查询是否使用 DoH
-          },
-          clash: {
-            doh: false
-          }
+    watch: {
+      'form.classic': function ( newVal )
+      {
+        if ( newVal )
+        {
+          this.form.expand = false;
         }
       },
-
-      customParams: [],
-
-      loading: false,
-      customSubUrl: "",
-      curtomShortSubUrl: "",
-
-      dialogUploadConfigVisible: false,
-      loadConfig: "",
-      dialogLoadConfigVisible: false,
-      uploadConfig: "",
-      uploadPassword: "",
-      myBot: tgBotLink,
-      sampleConfig: remoteConfigSample,
-      subDocAdvanced: subDocAdvanced,
-
-      needUdp: false, // 是否需要添加 udp 参数
-    };
-  },
-  created() {
-    document.title = "Subscription Converter";
-    this.isPC = this.$getOS().isPc;
-
-    // 获取 url cache
-    if (process.env.VUE_APP_USE_STORAGE === 'true') {
-      this.form.sourceSubUrl = this.getLocalStorageItem('sourceSubUrl')
-    }
-  },
-  mounted() {
-    this.form.clientType = "clash";
-    this.notify();
-    this.getBackendVersion();
-  },
-  methods: {
-    onCopy() {
-      this.$message.success("Copied!");
+      'form.nodeList': function ( newVal )
+      {
+        if ( newVal )
+        {
+          this.form.expand = false;
+        }
+      },
+      'form.customBackend': function (newVal) {
+        if (newVal) {
+          this.getBackendVersion();
+        }
+      }
     },
-    goToProject() {
-      window.open(project);
-    },
-    gotoGayhub() {
-      window.open(gayhubRelease);
-    },
-    gotoRemoteConfig() {
-      window.open(remoteConfigSample);
-    },
-    clashInstall() {
-      if (this.customSubUrl === "") {
-        this.$message.error("请先填写必填项，生成订阅链接");
+    methods: {
+      onCopy ()
+      {
+        this.$message.success( "Copied!" );
+      },
+      goToProject ()
+      {
+        window.open( project );
+      },
+      gotoTgChannel ()
+      {
+        window.open( tgBotLink );
+      },
+      gotoGayhub ()
+      {
+        window.open( gayhubSource );
+      },
+      gotoGayhubRuleset ()
+      {
+        window.open( gayhubRuleset );
+      },
+      gotoRemoteConfig ()
+      {
+        window.open( remoteConfigSample );
+      },
+      clashInstall ()
+      {
+        if ( !this.validateRequiredFields( [ 'customSubUrl' ], "请先填写必填项，生成订阅链接" ) )
+        {
+          return false;
+        }
+        const url = "clash://install-config?url=";
+        // 修正变量名拼写错误
+        window.open(
+          url +
+          encodeURIComponent(
+            this.customShortSubUrl && this.customShortSubUrl !== "" ? this.customShortSubUrl
+              : this.customSubUrl
+          )
+        );
+      },
+      surgeInstall ()
+      {
+        if ( !this.validateRequiredFields( [ 'customSubUrl' ], "请先填写必填项，生成订阅链接" ) )
+        {
+          return false;
+        }
+        const url = "surge://install-config?url=";
+        window.open( url + this.customSubUrl );
+      },
+      addCustomParam ()
+      {
+        this.customParams.push( {
+          name: "",
+          value: "",
+        } );
+      },
+      /**
+       * 构建URL查询参数
+       * @returns {Object} 包含backend和queryParams的对象
+       */
+      buildUrlParams ()
+      {
+        const backend = this.form.customBackend || defaultBackend;
+        const sourceSub = this.form.sourceSubUrl.replace( /(\n|\r|\n\r)/g, "|" );
+
+        // 定义参数映射表
+        const paramMappings = [
+          { key: 'target', value: this.form.clientType },
+          { key: 'url', value: encodeURIComponent( sourceSub ) },
+          { key: 'config', value: this.form.remoteConfig ? this.form.remoteConfig : undefined, encode: true },
+          { key: 'insert', value: this.advanced === '2' && this.form.insert ? 'true' : undefined },
+          { key: 'expand', value: this.advanced === '2' && !this.form.nodeList ? ( this.form.expand ? 'true' : 'false' ) : undefined },
+          { key: 'classic', value: this.advanced === '2' && this.form.classic && !this.form.nodeList && !this.form.expand ? 'true' : undefined },
+          { key: 'exclude', value: this.advanced === '2' && this.form.excludeRemarks ? this.form.excludeRemarks : undefined, encode: true },
+          { key: 'include', value: this.advanced === '2' && this.form.includeRemarks ? this.form.includeRemarks : undefined, encode: true },
+          { key: 'filename', value: this.advanced === '2' && this.form.filename ? this.form.filename : undefined, encode: true },
+          { key: 'dev_id', value: this.advanced === '2' && this.form.devid ? this.form.devid : undefined, encode: true },
+          { key: 'append_type', value: this.advanced === '2' && this.form.appendType ? 'true' : undefined },
+          { key: 'tfo', value: this.advanced === '2' && this.form.tfo ? 'true' : undefined },
+          { key: 'tls13', value: this.advanced === '2' && this.form.tls13 ? 'true' : undefined },
+          { key: 'scv', value: this.advanced === '2' && this.form.scv ? 'true' : undefined },
+          { key: 'udp', value: this.advanced === '2' && this.form.udp ? 'true' : undefined },
+          { key: 'xudp', value: this.advanced === '2' && this.form.xudp ? 'true' : undefined },
+          { key: 'sort', value: this.advanced === '2' && this.form.sort ? 'true' : undefined },
+          { key: 'emoji', value: this.advanced === '2' && this.form.emoji ? 'true' : undefined },
+          { key: 'list', value: this.advanced === '2' && this.form.nodeList ? 'true' : undefined },
+          { key: 'fdn', value: this.advanced === '2' && this.form.fdn ? 'true' : undefined },
+          { key: 'new_name', value: this.advanced === '2' && this.form.clientType === 'clash' && this.form.new_name ? 'true' : undefined },
+          { key: 'clash.dns', value: this.advanced === '2' && this.form.clientType === 'clash' && this.form.clashdns ? this.form.clashdns : undefined, encode: true, skipEmpty: true }
+        ];
+
+        // 处理自定义参数
+        const customParams = this.advanced === '2'
+          ? this.customParams
+            .filter( param => param.name && param.value )
+            .map( param => ( {
+              key: encodeURIComponent( param.name ),
+              value: encodeURIComponent( param.value )
+            } ) )
+          : [];
+
+        // 构建查询参数
+        const queryParams = [
+          ...paramMappings
+            .filter( ( { key, value, skipEmpty } ) =>
+            {
+              if ( key === 'expand' && this.form.nodeList ) return false;
+              return value !== undefined && value !== null && !( skipEmpty && value === "" );
+            } )
+            .map( ( { key, value, encode } ) =>
+              `${ key }=${ encode ? encodeURIComponent( value ) : value }` ),
+          ...customParams.map( ( { key, value } ) => `${ key }=${ value }` )
+        ];
+
+        return {
+          backend,
+          queryParams
+        };
+      },
+
+      /**
+       * 验证必填表单字段
+       * @returns {boolean} 验证是否通过
+       */
+      validateRequiredFields ()
+      {
+        if ( !this.form.sourceSubUrl || !this.form.clientType )
+        {
+          this.$message.error( "订阅链接与客户端为必填项" );
+          return false;
+        }
+        return true;
+      },
+
+      makeUrl ()
+      {
+        if ( !this.validateRequiredFields() )
+        {
+          return false;
+        }
+
+        const { backend, queryParams } = this.buildUrlParams();
+        this.customSubUrl = `${ backend }${ queryParams.join( '&' ) }`;
+        this.copyToClipboard(this.customSubUrl);
+        this.$message.success( "定制订阅已复制到剪贴板" );
+      },
+      notify ()
+      {
+        this.$notify( {
+          title: "隐私提示",
+          type: "warning",
+          message: "各种订阅链接生成纯前端实现，无隐私问题。默认提供后端转换服务，隐私担忧者请自行搭建后端服务。",
+          customClass: 'custom-notify'
+        } );
+      },
+
+      handleError ( error, defaultMessage = '操作失败' )
+      {
+        console.error( error );
+        const message = error.response?.data?.message ||
+          error.message ||
+          defaultMessage;
+        this.$message.error( message );
         return false;
-      }
-
-      const url = "clash://install-config?url=";
-      window.open(
-        url +
-        encodeURIComponent(
-          this.curtomShortSubUrl !== ""
-            ? this.curtomShortSubUrl
-            : this.customSubUrl
-        )
-      );
-    },
-    surgeInstall() {
-      if (this.customSubUrl === "") {
-        this.$message.error("请先填写必填项，生成订阅链接");
-        return false;
-      }
-
-      const url = "surge://install-config?url=";
-      window.open(url + this.customSubUrl);
-    },
-    addCustomParam(){
-      this.customParams.push({
-        name: "",
-        value: "",
-      })
-    },
-    makeUrl() {
-      if (this.form.sourceSubUrl === "" || this.form.clientType === "") {
-        this.$message.error("订阅链接与客户端为必填项");
-        return false;
-      }
-
-      let backend =
-        this.form.customBackend === ""
-          ? defaultBackend
-          : this.form.customBackend;
-
-      let sourceSub = this.form.sourceSubUrl;
-      sourceSub = sourceSub.replace(/(\n|\r|\n\r)/g, "|");
-
-      this.customSubUrl =
-        backend +
-        "target=" +
-        this.form.clientType +
-        "&url=" +
-        encodeURIComponent(sourceSub) +
-        "&insert=" +
-        this.form.insert;
-
-      if (this.advanced === "2") {
-        if (this.form.remoteConfig) {
-          this.customSubUrl +=
-            "&config=" + encodeURIComponent(this.form.remoteConfig);
-        }
-        if (this.form.excludeRemarks) {
-          this.customSubUrl +=
-            "&exclude=" + encodeURIComponent(this.form.excludeRemarks);
-        }
-        if (this.form.includeRemarks) {
-          this.customSubUrl +=
-            "&include=" + encodeURIComponent(this.form.includeRemarks);
-        }
-        if (this.form.filename) {
-          this.customSubUrl +=
-            "&filename=" + encodeURIComponent(this.form.filename);
-        }
-        if (this.form.appendType) {
-          this.customSubUrl +=
-            "&append_type=" + this.form.appendType.toString();
+      },
+      /**
+       * Asynchronously analyzes the URL.
+       *
+       * @return {Promise<string>} The result of the analysis.
+       */
+      async analyzeUrl ()
+      {
+        if ( this.loadConfig.includes( "target" ) )
+        {
+          return this.loadConfig;
         }
 
-        this.customSubUrl +=
-          "&emoji=" +
-          this.form.emoji.toString() +
-          "&list=" +
-          this.form.nodeList.toString() +
-          "&tfo=" +
-          this.form.tfo.toString() +
-          "&scv=" +
-          this.form.scv.toString() +
-          "&fdn=" +
-          this.form.fdn.toString() +
-          "&expand=" +
-          this.form.expand.toString() +
-          "&sort=" +
-          this.form.sort.toString();
-
-        if (this.needUdp) {
-          this.customSubUrl += "&udp=" + this.form.udp.toString()
-        }
-
-        if (this.form.tpl.surge.doh === true) {
-          this.customSubUrl += "&surge.doh=true";
-        }
-
-        if (this.form.clientType === "clash") {
-          if (this.form.tpl.clash.doh === true) {
-            this.customSubUrl += "&clash.doh=true";
-          }
-
-          this.customSubUrl += "&new_name=" + this.form.new_name.toString();
-        }
-
-        this.customParams.filter(param => param.name && param.value).forEach(param => {
-          this.customSubUrl += `&${encodeURIComponent(param.name)}=${encodeURIComponent(param.value)}`
-        })
-      }
-
-      this.$copyText(this.customSubUrl);
-      this.$message.success("定制订阅已复制到剪贴板");
-    },
-    makeShortUrl() {
-      if (this.customSubUrl === "") {
-        this.$message.warning("请先生成订阅链接，再获取对应短链接");
-        return false;
-      }
-
-      this.loading = true;
-
-      let data = new FormData();
-      data.append("longUrl", btoa(this.customSubUrl));
-
-      this.$axios
-        .post(shortUrlBackend, data, {
-          header: {
-            "Content-Type": "application/form-data; charset=utf-8"
-          }
-        })
-        .then(res => {
-          if (res.data.Code === 1 && res.data.ShortUrl !== "") {
-            this.curtomShortSubUrl = res.data.ShortUrl;
-            this.$copyText(res.data.ShortUrl);
-            this.$message.success("短链接已复制到剪贴板");
-          } else {
-            this.$message.error("短链接获取失败：" + res.data.Message);
-          }
-        })
-        .catch(() => {
-          this.$message.error("短链接获取失败");
-        })
-        .finally(() => {
-          this.loading = false;
-        });
-    },
-    notify() {
-      const h = this.$createElement;
-
-      this.$notify({
-        title: "隐私提示",
-        type: "warning",
-        message: h(
-          "i",
-          { style: "color: teal" },
-          "各种订阅链接（短链接服务除外）生成纯前端实现，无隐私问题。默认提供后端转换服务，隐私担忧者请自行搭建后端服务。"
-        )
-      });
-    },
-    confirmUploadConfig() {
-      if (this.uploadConfig === "") {
-        this.$message.warning("远程配置不能为空");
-        return false;
-      }
-
-      this.loading = true;
-
-      let body = {
-        content: this.uploadConfig,
-      }
-      this.$axios.post(configUploadBackend, body).then(res => {
-        if (res.data.code === 0 && res.data.data.url !== "") {
-          this.$message.success(
-            "远程配置上传成功，配置链接已复制到剪贴板，有效期三个月望知悉"
-          );
-
-          // 自动填充至『表单-远程配置』
-          this.form.remoteConfig = res.data.data.url;
-          this.$copyText(this.form.remoteConfig);
-
-          this.dialogUploadConfigVisible = false;
-        } else {
-          this.$message.error("远程配置上传失败: " + res.data.msg);
-        }
-      })
-        .catch(() => {
-          this.$message.error("远程配置上传失败");
-        })
-        .finally(() => {
-          this.loading = false;
-        });
-    },
-    /**
- * Asynchronously analyzes the URL.
- *
- * @return {Promise<string>} The result of the analysis.
- */
-    async analyzeUrl() {
-      // Check if `loadConfig` includes "target"
-      if (this.loadConfig.includes("target")) {
-        // If it does, return `loadConfig`
-        return this.loadConfig;
-      } else {
-        // Otherwise, set `loading` to true
         this.loading = true;
-        try {
-          // Fetch the data from `loadConfig` using GET method and follow redirects
-          let response = await fetch(this.loadConfig, {
+        try
+        {
+          const response = await fetch( this.loadConfig, {
             method: "GET",
             redirect: "follow",
-          });
-          // Return the URL from the response
+          } );
           return response.url;
-        } catch (e) {
-          // If an error occurs, display an error message with the error details
-          this.$message.error(
-            "解析短链接失败，请检查短链接服务端是否配置跨域：" + e
-          );
-        } finally {
-          // Set `loading` to false
+        } catch ( error )
+        {
+          this.handleError( error, "解析短链接失败，请检查短链接服务端是否配置跨域" );
+          throw error; // 重新抛出错误以便上层捕获
+        } finally
+        {
           this.loading = false;
         }
-      }
-    },
-    /**
-     * Confirm and load the configuration.
-     *
-     * @return {boolean} Returns false if the 'loadConfig' is empty, otherwise returns true.
-     */
-    confirmLoadConfig() {
-      // Check if 'loadConfig' is empty
-      if (this.loadConfig.trim() === "") {
-        // Display error message if 'loadConfig' is empty
-        this.$message.error("订阅链接不能为空");
-        return false;
-      }
+      },
+      /**
+       * Confirm and load the configuration.
+       *
+       * @return {boolean} Returns false if the 'loadConfig' is empty, otherwise returns true.
+       */
+      /**
+       * 处理布尔类型表单字段
+       * @param {string} value - 字段值
+       * @returns {boolean} 转换后的布尔值
+       */
+      processBooleanField ( value )
+      {
+        return value === "true";
+      },
 
-      // Async function to handle the configuration loading
-      (async () => {
-        try {
-          // Analyze the URL and extract its components
-          const url = new URL(await this.analyzeUrl());
+      confirmLoadConfig ()
+      {
+        if ( this.loadConfig.trim() === "" )
+        {
+          this.$message.error( "订阅链接不能为空" );
+          return false;
+        }
 
-          // Set the custom backend URL
-          this.form.customBackend = url.origin + url.pathname + "?";
+        ( async () =>
+        {
+          try
+          {
+            const url = new URL( await this.analyzeUrl() );
+            this.form.customBackend = url.origin + url.pathname + "?";
+            const params = new URLSearchParams( url.search );
 
-          // Parse the URL parameters
-          const params = new URLSearchParams(url.search);
+            // 记录已处理的参数
+            const excludeParams = new Set();
+            const getParam = ( key ) =>
+            {
+              excludeParams.add( key );
+              return params.get( key );
+            };
 
-          // Record parameters have been read
-          const getParam = params.get.bind(params)
-          const excludeParams = new Set()
-          params.get = key => {
-            excludeParams.add(key)
-            return getParam(key)
+            // 处理基础参数
+            const target = getParam( "target" );
+            this.form.clientType = target === "surge"
+              ? target + "&ver=" + ( getParam( "ver" ) || "4" )
+              : target;
+
+            // 处理表单参数
+            const formParams = {
+              url: ( v ) => v.replace( /\|/g, "\n" ),
+              insert: this.processBooleanField,
+              config: ( v ) => v,
+              exclude: ( v ) => v,
+              include: ( v ) => v,
+              filename: ( v ) => v,
+              dev_id: ( v ) => v,
+              append_type: this.processBooleanField,
+              tfo: this.processBooleanField,
+              tls13: this.processBooleanField,
+              scv: this.processBooleanField,
+              udp: this.processBooleanField,
+              xudp: this.processBooleanField,
+              sort: this.processBooleanField,
+              emoji: this.processBooleanField,
+              list: this.processBooleanField,
+              "clash.dns": ( v ) => v,
+              new_name: this.processBooleanField,
+              fdn: this.processBooleanField,
+              expand: this.processBooleanField,
+              classic: this.processBooleanField
+            };
+
+            Object.entries( formParams ).forEach( ( [ key, processor ] ) =>
+            {
+              const value = getParam( key );
+              if ( value !== null )
+              {
+                // 特殊处理append_type和list到对应的表单字段
+                if ( key === 'append_type' )
+                {
+                  this.form.appendType = processor( value );
+                } else if ( key === 'list' )
+                {
+                  this.form.nodeList = processor( value );
+                } else
+                {
+                  this.form[ key.replace( '.', '_' ) ] = processor( value );
+                }
+              }
+            } );
+
+            // 处理 sourceSubUrl 参数
+            const sourceSubUrl = getParam( "url" );
+            if ( sourceSubUrl )
+            {
+              this.form.sourceSubUrl = decodeURIComponent( sourceSubUrl ).replace( /\|/g, "\n" );
+            }
+
+            // 统一处理参数赋值
+            const paramMappings = [
+              { param: 'remoteConfig', key: 'config' },
+              { param: 'includeRemarks', key: 'include' },
+              { param: 'excludeRemarks', key: 'exclude' },
+              { param: 'clashdns', key: 'clash.dns' },
+              { param: 'devid', key: 'dev_id' }
+            ];
+            paramMappings.forEach( mapping =>
+            {
+              this.form[ mapping.param ] = getParam( mapping.key ) || "";
+            } );
+
+            // 处理自定义参数，排除append_type和list
+            this.customParams = Array.from( params.entries() )
+              .filter( ( [ key ] ) => !excludeParams.has( key ) &&
+                key !== 'append_type' && key !== 'list' )
+              .map( ( [ name, value ] ) => ( { name, value } ) );
+
+            console.log( 'Form after parsing:', JSON.stringify( this.form, null, 2 ) );
+            this.dialogLoadConfigVisible = false;
+            this.$message.success( "长/短链接已成功解析为订阅信息" );
+          } catch ( error )
+          {
+            console.error( 'Error parsing URL:', error );
+            this.$message.error( "请输入正确的订阅地址!" );
           }
-
-          // Get the 'target' parameter
-          const target = params.get("target");
-
-          // Set the client type based on the 'target' parameter
-          if (target === "surge") {
-            const ver = params.get("ver") || "4";
-            this.form.clientType = target + "&ver=" + ver;
-          } else {
-            this.form.clientType = target;
+        } )();
+      },
+      renderPost ()
+      {
+        let data = new FormData();
+        data.append( "target", encodeURIComponent( this.form.clientType ) );
+        data.append( "url", encodeURIComponent( this.form.sourceSubUrl ) );
+        data.append( "insert", encodeURIComponent( this.form.insert ) );
+        data.append( "config", encodeURIComponent( this.form.remoteConfig ) );
+        data.append( "exclude", encodeURIComponent( this.form.excludeRemarks ) );
+        data.append( "include", encodeURIComponent( this.form.includeRemarks ) );
+        data.append( "filename", encodeURIComponent( this.form.filename.toString() ) );
+        data.append( "dev_id", encodeURIComponent( this.form.devid.toString() ) );
+        data.append( "append_type", encodeURIComponent( this.form.appendType.toString() ) );
+        data.append( "tfo", encodeURIComponent( this.form.tfo.toString() ) );
+        data.append( "tls13", encodeURIComponent( this.form.tls13.toString() ) );
+        data.append( "scv", encodeURIComponent( this.form.scv.toString() ) );
+        data.append( "udp", encodeURIComponent( this.form.udp.toString() ) );
+        data.append( "xudp", encodeURIComponent( this.form.xudp.toString() ) );
+        data.append( "sort", encodeURIComponent( this.form.sort.toString() ) );
+        data.append( "emoji", encodeURIComponent( this.form.emoji.toString() ) );
+        data.append( "list", encodeURIComponent( this.form.nodeList.toString() ) );
+        data.append( "clash.dns", encodeURIComponent( this.form.clashdns.toString() ) );
+        data.append( "newname", encodeURIComponent( this.form.new_name.toString() ) );
+        data.append( "fdn", encodeURIComponent( this.form.fdn.toString() ) );
+        data.append( "expand", encodeURIComponent( this.form.expand.toString() ) );
+        data.append( "classic", encodeURIComponent( this.form.classic.toString() ) );
+        return data;
+      },
+      backendSearch ( queryString, cb )
+      {
+        let backends = this.options.customBackend;
+        let results = queryString
+          ? backends.filter( this.createFilter( queryString ) )
+          : backends;
+        // 调用 callback 返回建议列表的数据
+        cb( results );
+      },
+      createFilter ( queryString )
+      {
+        return ( candidate ) =>
+        {
+          return (
+            candidate.value.toLowerCase().indexOf( queryString.toLowerCase() ) === 0
+          );
+        };
+      },
+      async getBackendVersion ()
+      {
+        try
+        {
+          const response = await this.$axios.get(
+        `${ this.form.customBackend.substring( 0, this.form.customBackend.length - 5 ) }/version`
+          );
+          this.backendVersion = response.data
+        .replace( /backend\n$/gm, "" )
+        .replace( "subconverter", "" );
+        } catch ( error )
+        {
+          this.$alert(
+        '<span style="color: orange;">获取后端版本信息失败，当前后端不可用！</span>',
+        "提示",
+        { type: "error", dangerouslyUseHTMLString: true }
+          );
+        }
+      },
+      saveSubUrl ()
+      {
+        if ( this.form.sourceSubUrl !== "" )
+        {
+          this.setLocalStorageItem( "sourceSubUrl", this.form.sourceSubUrl );
+        }
+      },
+      getLocalStorageItem ( itemKey )
+      {
+        const now = +new Date();
+        let ls = localStorage.getItem( itemKey );
+        let itemValue = "";
+        if ( ls !== null )
+        {
+          let data = JSON.parse( ls );
+          if ( data.expire > now )
+          {
+            itemValue = data.value;
+          } else
+          {
+            localStorage.removeItem( itemKey );
           }
+        }
+        return itemValue;
+      },
+      setLocalStorageItem ( itemKey, itemValue )
+      {
+        const ttl = import.meta.env.VITE_CACHE_TTL;
+        const now = +new Date();
+        let data = {
+          setTime: now,
+          ttl: parseInt( ttl ),
+          expire: now + ttl * 1000,
+          value: itemValue,
+        };
+        localStorage.setItem( itemKey, JSON.stringify( data ) );
+      },
 
-          // Set other form properties based on the URL parameters
-          this.form.sourceSubUrl = params.get("url").replace(/\|/g, "\n");
-          this.form.insert = params.get("insert") === "true";
-          this.form.remoteConfig = params.get("config");
-          this.form.excludeRemarks = params.get("exclude");
-          this.form.includeRemarks = params.get("include");
-          this.form.filename = params.get("filename");
-          this.form.appendType = params.get("append_type") === "true";
-          this.form.emoji = params.get("emoji") === "true";
-          this.form.nodeList = params.get("list") === "true";
-          this.form.tfo = params.get("tfo") === "true";
-          this.form.scv = params.get("scv") === "true";
-          this.form.fdn = params.get("fdn") === "true";
-          this.form.sort = params.get("sort") === "true";
-          this.form.udp = params.get("udp") === "true";
-          this.form.expand = params.get("expand") === "true";
-          this.form.tpl.surge.doh = params.get("surge.doh") === "true";
-          this.form.tpl.clash.doh = params.get("clash.doh") === "true";
-          this.form.new_name = params.get("new_name") === "true";
-
-          // Filter custom parameters
-          this.customParams = Array.from(params
-            .entries()
-            .filter(e => !excludeParams.has(e[0]))
-            .map(e => ({ name: e[0], value: e[1] }))
+      filterRemoteConfig ( query )
+      {
+        // 确保搜索功能不影响默认显示
+        if ( !query ) return this.options.remoteConfig;
+        return this.options.remoteConfig.map( group => ( {
+          ...group,
+          options: group.options.filter( item =>
+            item.label.toLowerCase().includes( query.toLowerCase() )
           )
-
-          // Hide the configuration dialog
-          this.dialogLoadConfigVisible = false;
-
-          // Display success message
-          this.$message.success("长/短链接已成功解析为订阅信息");
-        } catch (error) {
-          // Display error message if URL is not valid
-          this.$message.error("请输入正确的订阅地址!");
+        } ) );
+      },
+      openLoadConfigDialog ()
+      {
+        this.dialogLoadConfigVisible = true;
+      },
+      copyToClipboard(text) {
+        if (!text) {
+          this.$message.error("没有可复制的内容");
+          return;
         }
-      })();
-    },
-    backendSearch(queryString, cb) {
-      let backends = this.options.backendOptions;
-
-      let results = queryString
-        ? backends.filter(this.createFilter(queryString))
-        : backends;
-
-      // 调用 callback 返回建议列表的数据
-      cb(results);
-    },
-    createFilter(queryString) {
-      return candidate => {
-        return (
-          candidate.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
-        );
-      };
-    },
-    getBackendVersion() {
-      this.$axios
-        .get(
-          defaultBackend.substring(0, defaultBackend.length - 5) + "/version"
-        )
-        .then(res => {
-          this.backendVersion = res.data.replace(/backend\n$/gm, "");
-          this.backendVersion = this.backendVersion.replace("subconverter", "");
-        });
-    },
-    saveSubUrl() {
-      if (this.form.sourceSubUrl !== '') {
-        this.setLocalStorageItem('sourceSubUrl', this.form.sourceSubUrl)
-      }
-    },
-    getLocalStorageItem(itemKey) {
-      const now = +new Date()
-      let ls = localStorage.getItem(itemKey)
-
-      let itemValue = ''
-      if (ls !== null) {
-        let data = JSON.parse(ls)
-        if (data.expire > now) {
-          itemValue = data.value
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text)
+            .then(() => {
+              this.$message.success("已复制到剪贴板");
+            })
+            .catch(() => {
+              this.$message.error("复制失败，请手动复制");
+            });
         } else {
-          localStorage.removeItem(itemKey)
+          // 兼容旧浏览器
+          const textarea = document.createElement("textarea");
+          textarea.value = text;
+          textarea.style.position = "fixed";
+          textarea.style.opacity = "0";
+          document.body.appendChild(textarea);
+          textarea.focus();
+          textarea.select();
+          try {
+            document.execCommand("copy");
+            this.$message.success("已复制到剪贴板");
+          } catch (e) {
+            this.$message.error("复制失败，请手动复制");
+          }
+          document.body.removeChild(textarea);
         }
-      }
-
-      return itemValue
+      },
     },
-    setLocalStorageItem(itemKey, itemValue) {
-      const ttl = process.env.VUE_APP_CACHE_TTL
-      const now = +new Date()
-
-      let data = {
-        setTime: now,
-        ttl: parseInt(ttl),
-        expire: now + ttl * 1000,
-        value: itemValue
-      }
-      localStorage.setItem(itemKey, JSON.stringify(data))
-    }
-  },
-};
+  };
 </script>
