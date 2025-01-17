@@ -1,0 +1,4 @@
+.custom-notify .el-notification__content {
+  color: rgb(201, 133, 5);
+  font-style: italic;
+}
