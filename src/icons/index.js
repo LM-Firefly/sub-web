@@ -1,9 +1,16 @@
-import Vue from 'vue'
-import SvgIcon from '@/components/SvgIcon'// svg component
+import SvgIcon from '@/components/SvgIcon/index.vue'; // svg component
+import 'virtual:svg-icons-register';
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
-// register globally
-Vue.component('svg-icon', SvgIcon)
+export default ( app ) =>
+{
+  // register globally
+  app.component( 'svg-icon', SvgIcon );
 
-const req = require.context('./svg', false, /\.svg$/)
-const requireAll = requireContext => requireContext.keys().map(requireContext)
-requireAll(req)
+  // register element-plus icons
+  for ( const [ key, component ] of Object.entries( ElementPlusIconsVue ) )
+  {
+    app.component( key, component )
+  }
+
+};
