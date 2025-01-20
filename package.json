@@ -19,7 +19,7 @@
     "register-service-worker": "^1.7.2",
     "vue-clipboard2": "^0.3.3",
     "vue-router": "^3.6.5",
-    "vue": "^2.7.14"
+    "vue": "^3.5.13"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
