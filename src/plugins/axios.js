@@ -1,6 +1,9 @@
-import Vue from "vue";
-import axios from "axios";
+// src/plugins/axios.js
+import axios from 'axios';
 
-axios.defaults.timeout = 5000; //请求超时的时间设定
-
-Vue.prototype.$axios = axios;
+export default {
+  install(app) {
+    // 挂载 axios 到组件实例上，所有组件可通过 this.$axios 访问
+    app.config.globalProperties.$axios = axios;
+  }
+};

@@ -1,4 +1,8 @@
-import Vue from "vue";
-import clipboard from "vue-clipboard2";
 
-Vue.use(clipboard);
+import clipboardPlugin from 'vue-clipboard3';
+
+export default {
+  install(app) {
+    app.use(clipboardPlugin);
+  }
+};

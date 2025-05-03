@@ -3,13 +3,13 @@
     <el-row style="margin-top: 10px">
       <el-col>
         <el-card>
-          <div slot="header">
+          <template v-slot:header>
             <span class="brand-name">Firefly-SubConverter</span>
             <svg-icon icon-class="github" style="margin-left: 20px" @click="goToProject"/>
             <svg-icon icon-class="telegram" style="margin-left: 20px" @click="gotoTgChannel"/>
             <svg-icon icon-class="clash" style="margin-left: 20px" @click="gotoGayhubRuleset"/>
             <div style="font-style: normal; font-size: 80%; text-align: right; margin-top: 5px;">{{ backendVersion }}</div>
-          </div>
+          </template>
           <el-container>
             <el-form :model="form" label-width="100px" label-position="left" style="width: 100%" class="sub-form" >
               <el-form-item label="模式设置:">
@@ -26,9 +26,12 @@
               </el-form-item>
               <el-form-item label="远程配置:">
                 <el-select v-model="form.remoteConfig" style="width: 100%" allow-create filterable>
-                  <div>
-                    <el-link slot="append" @click="gotoRemoteConfig" icon="el-icon-info" >远程配置示例</el-link>
-                  </div>
+                  <template #append>
+                    <el-link @click="gotoRemoteConfig" >
+                      <el-icon><InfoFilled /></el-icon>
+                      远程配置示例
+                    </el-link>
+                  </template>
                   <el-option-group label-position="left" style="width: 100%" v-for="group in options.remoteConfig" :key="group.label" :label="group.label" >
                     <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
                   </el-option-group>
@@ -36,9 +39,12 @@
               </el-form-item>
               <el-form-item label="后端地址:">
                 <el-select v-model="form.customBackend" style="width: 100%" allow-create filterable>
-                  <div>
-                    <el-link slot="append" @click="gotoGayhub" icon="el-icon-info" >Docker快速部署Demo，前往项目仓库</el-link>
-                  </div>
+                  <template #append>
+                    <el-link @click="gotoGayhub">
+                      <el-icon><InfoFilled /></el-icon>
+                      Docker快速部署Demo，前往项目仓库
+                    </el-link>
+                  </template>
                   <el-option v-for="(v, k) in options.customBackend" :key="k" :label="k" :value="v"/>
                 </el-select>
               </el-form-item>
@@ -61,11 +67,15 @@
                   <el-input v-model="form.devid" placeholder="用于设置QuantumultX的远程设备ID"/>
                 </el-form-item>
                 <el-form-item v-for="(param, i) in customParams" :key="i">
-                  <el-input slot="label" v-model="param.name" placeholder="自定义参数名">
-                    <div slot="suffix" style="width: 10px">:</div>
+                  <el-input v-model="param.name" placeholder="自定义参数名">
+                    <template #suffix>
+                      <div style="width: 10px">:</div>
+                    </template>
                   </el-input>
                   <el-input v-model="param.value" placeholder="自定义参数内容">
-                    <el-button slot="suffix" type="text" icon="el-icon-delete" style="margin-right: 5px" @click="customParams.splice(i, 1)"/>
+                    <el-button text @click="customParams.splice(i, 1)" style="margin-right: 5px">
+                      <el-icon><Delete /></el-icon>
+                    </el-button>
                   </el-input>
                 </el-form-item>
                 <el-form-item style="width: 100%">
@@ -116,7 +126,9 @@
                           <el-checkbox v-model="form.xudp" label="启用 XUDP" ></el-checkbox>
                         </el-col>
                       </el-row>
-                      <el-button slot="reference">节点处理</el-button>
+                    <template #reference>
+                      <el-button >节点处理</el-button>
+                    </template>
                     </el-popover>
                     <el-popover placement="bottom" v-model="form.rule" style="text-align: center" >
                       <el-row :gutter="10">
@@ -125,55 +137,75 @@
                       <el-row :gutter="10">
                         <el-checkbox v-model="form.classic" label="Classic Rule Provider" ></el-checkbox>
                       </el-row>
-                      <el-button slot="reference" style="margin-left: 10px">Rule Provider 选项</el-button>
+                      <template #reference>
+                        <el-button style="margin-left: 10px">Rule Provider 选项</el-button>
+                      </template>
                     </el-popover>
                     <el-popover placement="top-end" title="添加自定义转换参数" trigger="hover" >
-                      <el-link type="primary" :href="subDocAdvanced" target="_blank" icon="el-icon-info" >参考文档</el-link>
-                      <el-button slot="reference" @click="addCustomParam" style="margin-left: 10px" >
-                        <i class="el-icon-plus"></i>
-                      </el-button>
+                      <el-link type="primary" :href="subDocAdvanced" target="_blank" >
+                        <el-icon><InfoFilled /></el-icon>
+                        参考文档
+                      </el-link>
+                      <template #reference>
+                        <el-button @click="addCustomParam" style="margin-left: 10px" >
+                        <el-icon><Plus /></el-icon>
+                        </el-button>
+                      </template>
                     </el-popover>
                   </el-row>
                 </el-form-item>
               </div>
               <div style="margin-top: 50px"></div>
               <el-divider content-position="center">
-                <i class="el-icon-magic-stick"></i>
+                <el-icon><MagicStick /></el-icon>
               </el-divider>
               <el-form-item label="定制订阅:">
                 <el-input class="copy-content" disabled v-model="customSubUrl">
-                  <el-button slot="append" v-clipboard:copy="customSubUrl" v-clipboard:success="onCopy" ref="copy-btn" icon="el-icon-document-copy" >复制</el-button>
+                  <template #append>
+                    <el-button v-clipboard:copy="customSubUrl" v-clipboard:success="onCopy" ref="copyBtn">
+                      <el-icon><DocumentCopy /></el-icon> 复制
+                    </el-button>
+                  </template>
                 </el-input>
               </el-form-item>
               <el-form-item style="margin-top: 40px; text-align: center">
-                <el-button style="width: 144px" type="danger" @click="makeUrl" :disabled="form.sourceSubUrl.length === 0" >生成订阅链接</el-button>
-                <el-button style="width: 144px" type="primary" @click="clashInstall" icon="el-icon-connection" :disabled="customSubUrl.length === 0" >一键导入Clash</el-button>
-                <!-- <el-button style="width: 144px" type="primary" @click="surgeInstall" icon="el-icon-connection">一键导入Surge</el-button> -->
+                <el-button style="width: 144px" type="danger" @click="makeUrl" :disabled="form.sourceSubUrl.length === 0" >
+                  <el-icon><ElIconConnection /></el-icon> 生成订阅链接
+                </el-button>
+                <el-button style="width: 144px" type="primary" @click="clashInstall" :disabled="customSubUrl.length === 0" >
+                  <el-icon><ElIconConnection /></el-icon> 一键导入Clash
+                </el-button>
+                <!-- <el-button style="width: 144px" type="primary" @click="surgeInstall" :icon="ElIconConnection" >一键导入Surge</el-button> -->
               </el-form-item>
               <el-form-item style="text-align: center">
-                <el-button style="width: 300px" type="primary" @click="dialogLoadConfigVisible = true" icon="el-icon-copy-document" :loading="loading" >从URL解析</el-button>
+                <el-button style="width: 300px" type="primary" @click="dialogLoadConfigVisible = true" :loading="loading" >
+                  <el-icon><DocumentCopy /></el-icon> 从URL解析
+                </el-button>
               </el-form-item>
             </el-form>
           </el-container>
         </el-card>
       </el-col>
     </el-row>
-    <el-dialog :visible.sync="dialogLoadConfigVisible" :show-close="false" :close-on-click-modal="false" :close-on-press-escape="false" style="width: 100%">
-      <div slot="title">可以从老的订阅信息中解析信息,填入页面中去</div>
+    <el-dialog v-model="dialogLoadConfigVisible" :show-close="false" :close-on-click-modal="false" :close-on-press-escape="false" style="width: 100%">
+      <template #header>可以从老的订阅信息中解析信息,填入页面中去</template>
       <el-form label-position="left" style="width: 100%">
         <el-form-item prop="uploadConfig">
-          <el-input  v-model="loadConfig" type="textarea" :autosize="{ minRows: 15, maxRows: 30 }" maxlength="10000" show-word-limit></el-input>
+          <el-input v-model="loadConfig" type="textarea" :autosize="{ minRows: 15, maxRows: 30 }" maxlength="10000" show-word-limit></el-input>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <template #footer>
         <el-button @click=" loadConfig = ''; dialogLoadConfigVisible = false; " >取 消</el-button>
         <el-button type="primary" @click="confirmLoadConfig" :disabled="loadConfig.length === 0" >确 定</el-button>
-      </div>
+      </template>
     </el-dialog>
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive} from 'vue'
+import { DocumentCopy, MagicStick, InfoFilled, Plus, Delete } from '@element-plus/icons-vue'
+
 const project = process.env.VUE_APP_PROJECT;
 const remoteConfigSample = process.env.VUE_APP_SUBCONVERTER_REMOTE_CONFIG;
 const gayhubSource = process.env.VUE_APP_BACKEND;
@@ -181,13 +213,13 @@ const gayhubRuleset = process.env.VUE_APP_RULESET_LINK;
 const defaultBackend = process.env.VUE_APP_SUBCONVERTER_DEFAULT_BACKEND + "/sub?";
 const tgBotLink = process.env.VUE_APP_BOT_LINK;
 const subDocAdvanced = process.env.VUE_APP_SUBCONVERTER_DOC_ADVANCED;
-export default {
+defineExpose( {
   data() {
     var data = {
-      backendVersion: "",
-      advanced: "1",
+      backendVersion: ref(""),
+      advanced: ref("1"),
       // 是否为 PC 端
-      isPC: true,
+      isPC: ref(true),
       options: {
         clientTypes: {
           Clash: "clash",
@@ -374,7 +406,7 @@ export default {
           },
         ],
       },
-      form: {
+      form: reactive({
         appendType: false,
         clashdns: "", // 选择base.tpl 里面Clash DNS区块
         classic: false, // 是否使用 Clash Classic Rule Provider
@@ -400,15 +432,15 @@ export default {
         tfo: false,
         udp: false,
         xudp: false,
-      },
-      customParams: [],
-      loading: false,
-      customSubUrl: "",
-      loadConfig: "",
-      dialogLoadConfigVisible: false,
-      myBot: tgBotLink,
-      sampleConfig: remoteConfigSample,
-      subDocAdvanced: subDocAdvanced,
+      }),
+      customParams: ref([]),
+      loading: ref(false),
+      customSubUrl: ref(""),
+      loadConfig: ref(""),
+      dialogLoadConfigVisible: ref(false),
+      myBot: ref(tgBotLink),
+      sampleConfig: ref(remoteConfigSample),
+      subDocAdvanced: ref(subDocAdvanced),
     };
     // window.console.log(data.options.remoteConfig);
     // window.console.log(data.options.customBackend);
@@ -875,5 +907,5 @@ export default {
       localStorage.setItem(itemKey, JSON.stringify(data));
     },
   },
-};
+});
 </script>

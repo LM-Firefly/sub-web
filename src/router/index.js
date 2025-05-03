@@ -1,8 +1,6 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
+import { createRouter, createWebHistory } from 'vue-router';
 
-Vue.use(VueRouter);
-
+// 定义路由配置
 const routes = [
   {
     path: "*",
@@ -11,10 +9,9 @@ const routes = [
   },
 ];
 
-const router = new VueRouter({
-  mode: "history",
-  base: process.env.BASE_URL,
-  routes,
+const router = createRouter({
+  history: createWebHistory(),  // 或 createWebHashHistory() 根据需要选择
+  routes
 });
 
 export default router;

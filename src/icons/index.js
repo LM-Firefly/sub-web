@@ -1,8 +1,13 @@
-import Vue from "vue";
+// src/icons/index.js
+import { createApp, h } from 'vue';
+const VueShim = { createApp, h };
+export default VueShim;
+
 import SvgIcon from "@/components/SvgIcon"; // svg component
 
 // register globally
-Vue.component("svg-icon", SvgIcon);
+const app = VueShim.createApp({});
+app.component("svg-icon", SvgIcon);
 
 const req = require.context("./svg", false, /\.svg$/);
 const requireAll = (requireContext) =>

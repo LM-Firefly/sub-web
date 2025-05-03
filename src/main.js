@@ -1,19 +1,25 @@
-import Vue from "vue";
-import App from "./App.vue";
+import { createApp } from 'vue';
+import App from './App.vue';
+import clipboardPlugin from './plugins/clipboard';
+import particlesPlugin from './plugins/particles';
 import router from "./router";
-require(`@/plugins/element-ui`);
-require(`@/plugins/clipboard`);
-require(`@/plugins/base64`);
-require(`@/plugins/particles`);
-require(`@/plugins/axios`);
-require(`@/plugins/device`);
-
+import ElementPlus from 'element-plus';
+import 'element-plus/dist/index.css'; // element-plus css
+import base64 from '@/plugins/base64';
+import axiosPlugin from './plugins/axios';
+import device from '@/plugins/device';
 import "@/icons"; // icon
 import "./registerServiceWorker";
 
-Vue.config.productionTip = false;
+const app = createApp(App);
 
-new Vue({
-  router,
-  render: (h) => h(App),
-}).$mount("#app");
+// 使用插件
+app.use(router);
+app.use(ElementPlus);
+app.use(clipboardPlugin);
+app.use( base64 );
+app.use(particlesPlugin);
+app.use( axiosPlugin );
+app.use( device );
+
+app.mount( '#app' );
