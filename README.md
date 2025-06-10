@@ -1,15 +1,15 @@
 # sub-web
 
-基于 vue-cli 与 [tindy2013/subconverter](https://github.com/tindy2013/subconverter) 后端实现的配置自动生成。
+基于 Vite + Vue3 与 [tindy2013/subconverter](https://github.com/tindy2013/subconverter) 后端实现的配置自动生成。
 
 ## Table of Contents
 
-- [ChangeLog](#ChangeLog)
-- [Docker](#Docker)
-- [Requirements](#Requirements)
+- [ChangeLog](#changelog)
+- [Docker](#docker)
+- [Requirements](#requirements)
 - [Install](#install)
 - [Usage](#usage)
-- [Related](#Related)
+- [Related](#related)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -18,7 +18,6 @@
 - 20200730
 
   - 独立各类后端配置到 .env 文件中，现在修改后端只需要修改 .env 即可。
-
 
 ## Docker
 
@@ -39,30 +38,36 @@ docker run -d -p 58080:80 --restart always --name subweb subweb-local:latest
 
 ## Requirements
 
-你需要安装 [Node](https://nodejs.org/zh-cn/) 与 [Yarn](https://legacy.yarnpkg.com/en/docs/install) 来安装依赖与打包发布。你可以通过以下命令查看是否安装成功。
+你需要安装 [Node](https://nodejs.org/zh-cn/) 与 [Yarn](https://legacy.yarnpkg.com/en/docs/install) 或 [npm](https://www.npmjs.com/) 来安装依赖与打包发布。你可以通过以下命令查看是否安装成功。
 注：以下步骤为 Ubuntu 下相应命令，其他系统请自行修改。为了方便后来人解决问题，有问题请发 issue。
 
 ```shell
 node -v
-v20.xx.x
+v22.xx.x
 
 yarn -v
 1.22.22
+# 或
+npm -v
 ```
 
 ## Install
 
 ```shell
 yarn install
+# 或
+npm install
 ```
 
 ## Usage
 
 ```shell
-yarn serve
+yarn dev
+# 或
+npm run dev
 ```
 
-浏览器访问 <http://localhost:8080/>
+浏览器访问 <http://localhost:5173/> （默认 Vite 端口）
 
 ## Deploy
 
@@ -70,6 +75,8 @@ yarn serve
 
 ```shell
 yarn build
+# 或
+npm run build
 ```
 
 你需要安装 nginx (或其他 web 服务器)并正确配置。以下为示例配置，你需要修改 example.com 为自己域名并配置正确的项目根路径（https 自行配置）。
