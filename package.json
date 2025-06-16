@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "atob": "^2.1.2",
-    "axios": "^1.9.0",
+    "axios": "^1.10.0",
     "btoa": "^1.2.1",
     "core-js": "^3.42.0",
     "element-plus": "^2.10.1",
