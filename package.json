@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",
-    "@babel/eslint-parser": "^7.27.1",
+    "@babel/eslint-parser": "^7.27.5",
     "@vue/cli-plugin-babel": "5",
     "@vue/cli-plugin-eslint": "5",
     "@vue/cli-plugin-pwa": "5",
