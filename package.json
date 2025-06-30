@@ -21,7 +21,7 @@
     "@vitejs/plugin-vue": "^6.0.0",
     "fast-glob": "^3.3.3",
     "sass": "^1.89.2",
-    "vite": "^6.3.5",
+    "vite": "^7.0.0",
     "vite-plugin-pwa": "^1.0.0",
     "vite-plugin-svg-icons": "^2.0.1",
     "workbox-build": "^7.3.0"
