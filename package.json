@@ -20,7 +20,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.0",
     "sass": "^1.89.2",
-    "vite": "^7.0.5",
+    "vite": "^7.0.6",
     "vite-plugin-pwa": "^1.0.1",
     "vite-plugin-svg-icons-ng": "^1.4.1",
     "workbox-build": "^7.3.0"
