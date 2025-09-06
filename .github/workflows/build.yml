@@ -39,7 +39,7 @@ jobs:
           path: dist/
       - name: Push update to subconverter
         if: ${{ github.ref == 'refs/heads/main' }}
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           github-token: ${{env.GIT_TOKEN}}
           script: |
