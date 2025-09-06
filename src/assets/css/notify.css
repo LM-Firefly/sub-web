@@ -1,0 +1,12 @@
+.custom-notify .el-notification__content {
+  color: rgb(201, 133, 5);
+  font-style: italic;
+}
+
+.custom-notify .el-notification__title {
+  color: rgb(201, 133, 5);
+}
+
+.custom-notify .el-notification__icon {
+  color: #E6A23C;
+}
