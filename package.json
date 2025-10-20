@@ -24,7 +24,7 @@
     "vite-plugin-pwa": "^1.0.3",
     "vite-plugin-svg-icons-ng": "^1.5.0",
     "unplugin-auto-import": "^20.2.0",
-    "unplugin-vue-components": "^29.1.0",
+    "unplugin-vue-components": "^30.0.0",
     "workbox-build": "^7.3.0",
     "workbox-window": "^7.3.0"
   }
