@@ -22,7 +22,7 @@ jobs:
         uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: "Asia/Shanghai"
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Use Node.js
         uses: actions/setup-node@v6
         with:
