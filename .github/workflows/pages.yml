@@ -18,7 +18,7 @@ jobs:
     outputs:
       ui-version: ${{ steps.web.outputs.ui-ver }}
     env:
-      GIT_TOKEN: ${{secrets.REPO_TOKEN}}
+      GIT_TOKEN: ${{secrets.GITHUB_TOKEN}}
     steps:
       - name: Setup timezone
         uses: szenius/set-timezone@v2.0
@@ -81,7 +81,7 @@ jobs:
 #    needs: prepare
 #    runs-on: ubuntu-latest
 #    env:
-#      GIT_TOKEN: ${{secrets.ACTIONS_TOKEN}}
+#      GIT_TOKEN: ${{secrets.GITHUB_TOKEN}}
 #      UI-VERSION: ${{ needs.prepare.outputs.ui-version }}
 #    steps:
 #      - name: Setup timezone
@@ -164,7 +164,7 @@ jobs:
 #    needs: prepare
 #    runs-on: ubuntu-latest
 #    env:
-#      GIT_TOKEN: ${{secrets.ACTIONS_TOKEN}}
+#      GIT_TOKEN: ${{secrets.GITHUB_TOKEN}}
 #    steps:
 #      - name: Setup timezone
 #        uses: hoang-rio/set-timezone@v1.4
@@ -187,7 +187,7 @@ jobs:
 #    needs: prepare
 #    runs-on: ubuntu-latest
 #    env:
-#      GIT_TOKEN: ${{secrets.ACTIONS_TOKEN}}
+#      GIT_TOKEN: ${{secrets.GITHUB_TOKEN}}
 #      VER: ${{ needs.prepare.outputs.ver }}
 #    steps:
 #      - name: Setup timezone

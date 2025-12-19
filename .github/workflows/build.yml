@@ -16,7 +16,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     env:
-      GIT_TOKEN: ${{secrets.REPO_TOKEN}}
+      GIT_TOKEN: ${{secrets.GITHUB_TOKEN}}
     steps:
       - name: Setup timezone
         uses: szenius/set-timezone@v2.0
