@@ -1,43 +1,50 @@
 <template>
-  <svg :class="svgClass" aria-hidden="true" v-on="$listeners">
-    <use :xlink:href="iconName" />
-  </svg>
+    <span :class="svgClass" aria-hidden="true" v-html="iconContent"></span>
 </template>
 
-<script>
-export default {
-  name: 'SvgIcon',
-  props: {
-    iconClass: {
-      type: String,
-      required: true
-    },
-    className: {
-      type: String,
-      default: ''
-    }
-  },
-  computed: {
-    iconName() {
-      return `#icon-${this.iconClass}`
-    },
-    svgClass() {
-      if (this.className) {
-        return 'svg-icon ' + this.className
-      } else {
-        return 'svg-icon'
-      }
-    }
-  }
+<script setup lang="ts">
+import { computed } from 'vue';
+import githubSvg from '@/icons/svg/github.svg?raw';
+import telegramSvg from '@/icons/svg/telegram.svg?raw';
+import clashSvg from '@/icons/svg/clash.svg?raw';
+
+interface Props {
+    iconClass: string;
+    className?: string;
 }
+
+const props = withDefaults(defineProps<Props>(), {
+    className: ""
+});
+
+const svgMap: Record<string, string> = {
+    github: githubSvg,
+    telegram: telegramSvg,
+    clash: clashSvg,
+};
+
+const iconContent = computed(() => svgMap[props.iconClass] ?? '');
+
+const svgClass = computed(() => {
+    if (props.className) {
+        return "svg-icon " + props.className;
+    } else {
+        return "svg-icon";
+    }
+});
 </script>
 
 <style scoped>
-.svg-icon {
-  width: 1em;
-  height: 1em;
-  vertical-align: -0.15em;
-  fill: currentColor;
-  overflow: hidden;
-}
+    .svg-icon {
+        display: inline-flex;
+        width: 18px;
+        height: 18px;
+        vertical-align: -0.15em;
+        overflow: hidden;
+    }
+    .svg-icon :deep(svg) {
+        width: 100%;
+        height: 100%;
+        fill: currentColor;
+    }
 </style>
