@@ -1,195 +1,168 @@
-# sub-web
+# Firefly-SubConverter
 
-![Vue](https://img.shields.io/badge/Vue-2.7.x-brightgreen.svg)
+![Vue](https://img.shields.io/badge/Vue-3.5.x-brightgreen.svg)
 ![Vite](https://img.shields.io/badge/Vite-8.x-646CFF.svg)
 ![Node](https://img.shields.io/badge/Node-24.x-green.svg)
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 ![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)
 
-基于 Vue.js 2.7 与 [tindy2013/subconverter](https://github.com/tindy2013/subconverter) 后端实现的订阅配置自动生成 Web 界面。
+基于 [Vite](https://vite.dev/) + [Vue 3](https://vuejs.org/) 构建的订阅转换前端，配合 [subconverter](https://github.com/LM-Firefly/subconverter) 后端使用，支持 Clash(mihomo) / Surge / QuantumultX / Singbox / Loon 等多种客户端。
 
-## ✨ 特性
+## 目录
 
-- 基于 Vue 2.7 + Element UI 的现代化界面
-- Vite 8 构建，热重载开发体验
-- 模块化架构：composables / services / utils / config 分层
-- SVG 图标精灵（vite-plugin-svg-icons）
-- 本地存储缓存，TTL 可配置
-- 短链接与配置文件上传集成
-- 一键导入 Clash
-- Docker 一键部署
+- [技术栈](#技术栈)
+- [环境要求](#环境要求)
+- [快速开始](#快速开始)
+- [环境配置](#环境配置)
+- [Docker 部署](#docker-部署)
+- [Nginx 部署](#nginx-部署)
+- [目录结构](#目录结构)
+- [相关项目](#相关项目)
+- [License](#license)
 
-## 🚀 快速开始
+## 技术栈
 
-### 使用 Docker（推荐）
+| 类别 | 技术 |
+|------|------|
+| 框架 | Vue 3.5 + TypeScript |
+| 构建 | Vite 8 + esbuild |
+| UI | Element Plus 2.14 |
+| HTTP | Axios |
+| 路由 | Vue Router 5 |
+| PWA | vite-plugin-pwa + Workbox |
+| 自动导入 | unplugin-auto-import + unplugin-vue-components |
+
+## 环境要求
+
+- **Node.js**: >= 24.x
+- **pnpm**: >= 9.x
+
+## 快速开始
 
 ```bash
-docker run -d \
-  -p 58080:80 \
-  --restart always \
-  --name subweb \
-  careywong/subweb:latest
-```
-
-访问 <http://localhost:58080/>
-
-### 本地开发
-
-```bash
-git clone https://github.com/CareyWang/sub-web.git
+git clone https://github.com/LM-Firefly/sub-web.git
 cd sub-web
-yarn install
-yarn dev
+pnpm install
+pnpm dev
 ```
 
 访问 <http://localhost:5173/>
 
-## 📦 环境要求
-
-- **Node.js**: 24.x
-- **Yarn**: 1.22+
-- **Docker**: 20.10+（可选）
-
-## 🛠️ 常用命令
+## 常用命令
 
 | 命令 | 说明 |
 |------|------|
-| `yarn dev` | 启动开发服务器 |
-| `yarn build` | 构建生产版本 |
-| `yarn preview` | 本地预览构建产物 |
-| `yarn lint` | ESLint 代码检查 |
+| `pnpm dev` | 启动开发服务器 |
+| `pnpm build` | 构建生产版本 |
+| `pnpm preview` | 本地预览构建产物 |
 
-## ⚙️ 环境配置
+## 环境配置
 
-创建 `.env` 文件（参考如下）：
+在项目根目录创建 `.env` 文件，参考 [.env](.env) 或如下模板：
 
 ```env
-# Subconverter 后端地址
-VITE_SUBCONVERTER_DEFAULT_BACKEND=https://api.wcc.best
-
-# 项目与社区链接
-VITE_PROJECT=https://github.com/CareyWang/sub-web
+# 项目链接
+VITE_PROJECT=https://github.com/LM-Firefly/sub-web
+VITE_BACKEND=https://github.com/LM-Firefly/Firefly-sub
 VITE_BOT_LINK=https://t.me/subconverter_discuss
+VITE_RULESET_LINK=https://github.com/LM-Firefly/Rules
 
-# 后端版本页
-VITE_BACKEND_RELEASE=https://github.com/tindy2013/subconverter/actions
+# Subconverter 后端
+VITE_SUBCONVERTER_DEFAULT_BACKEND=https://sub.koyeb.app
+VITE_SUBCONVERTER_REMOTE_CONFIG=https://raw.githubusercontent.com/LM-Firefly/Rules/master/Subconverter-base/MultiSub-NoReject.toml
+VITE_SUBCONVERTER_DOC_ADVANCED=https://github.com/LM-Firefly/subconverter/blob/main/README-cn.md
 
-# 远程配置示例与进阶文档
-VITE_SUBCONVERTER_REMOTE_CONFIG=https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/example_external_config.ini
-VITE_SUBCONVERTER_DOC_ADVANCED=https://github.com/tindy2013/subconverter/blob/master/README-cn.md
-
-# 短链接后端
-VITE_MYURLS_API=https://suosuo.de/short
-
-# 配置文件托管后端
-VITE_CONFIG_UPLOAD_API=https://oss.wcc.best/upload
-
-# 本地存储与缓存 TTL（秒）
+# 页面配置
 VITE_USE_STORAGE=true
 VITE_CACHE_TTL=86400
 ```
 
-如果部署在子路径（如 `/sub-web/`），在构建时指定 base：
+## Docker 部署
 
 ```bash
-yarn build --base=/sub-web/
+docker build -t subweb .
+docker run -d -p 58080:80 --restart always --name subweb subweb
 ```
 
-或在 `vite.config.js` 中设置 `base: '/sub-web/'`。
+Dockerfile 使用多阶段构建：Node 24 Alpine 编译 + Nginx 1.24 Alpine 托管静态文件。
 
-## 📁 目录结构
+## Nginx 部署
 
-```
-src/
-├── main.js              # 应用入口，插件注册
-├── App.vue
-├── router/              # Vue Router（history 模式）
-├── views/
-│   └── Subconverter.vue # 主页面
-├── components/          # 可复用组件（弹窗等）
-├── composables/         # 共享逻辑（表单、订阅、URL 解析）
-├── services/            # API 封装（后端版本、短链接、配置上传）
-├── config/              # 常量、客户端类型、远程配置列表
-├── utils/               # 工具函数（storage、validators、formatters）
-├── plugins/             # Vue 插件注册（Element UI、Axios 等）
-└── icons/svg/           # SVG 精灵图源文件
-```
-
-## 🐳 Docker 部署
-
-### 本地构建
+构建后将 `dist` 目录部署到 Nginx：
 
 ```bash
-docker build -t subweb-local:latest .
-
-docker run -d \
-  -p 58080:80 \
-  --restart always \
-  --name subweb \
-  subweb-local:latest
+pnpm build
 ```
 
-### Docker Compose（含短链接服务）
-
-```bash
-cd services
-
-# 编辑 .env，配置端口和域名
-# 默认：SUBWEB_PORT=58080, MYURLS_PORT=8002, MYURLS_DOMAIN=example.com
-vim .env
-
-docker-compose up -d
-```
-
-## 🌐 Nginx 配置示例
+Nginx 参考配置：
 
 ```nginx
 server {
     listen 80;
-    server_name your-domain.com;
+    server_name example.com;
 
     root /var/www/sub-web/dist;
     index index.html;
 
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
+    error_page 404 /index.html;
 
     gzip on;
-    gzip_types text/plain text/css application/javascript application/json;
     gzip_min_length 1k;
+    gzip_types text/plain text/css text/javascript application/json application/javascript application/xml;
 
-    location ~* \.(css|js|png|jpg|svg|woff2|ttf|eot)$ {
-        add_header Cache-Control "public,max-age=86400";
+    location ~* \.(css|js|png|jpg|jpeg|gif|svg|mp4|ogg|webm|woff)$ {
+        access_log off;
+        add_header Cache-Control "public,max-age=30*24*3600";
     }
 }
 ```
 
-## 🔗 相关项目
+如部署在子路径（如 `/sub-web/`），构建时指定 base：
 
-- **[tindy2013/subconverter](https://github.com/tindy2013/subconverter)** - 订阅转换后端
-- **[CareyWang/MyUrls](https://github.com/CareyWang/MyUrls)** - 短链接服务
+```bash
+pnpm build --base=/sub-web/
+```
 
-## 🤝 贡献
+## 目录结构
 
-1. Fork 本仓库
-2. 创建特性分支 `git checkout -b feature/AmazingFeature`
-3. 提交更改 `git commit -m 'Add some AmazingFeature'`
-4. 推送到分支 `git push origin feature/AmazingFeature`
-5. 创建 Pull Request
+```
+src/
+├── main.ts                  # 应用入口
+├── App.vue                  # 根组件
+├── views/
+│   └── Subconverter.vue     # 主页面（订阅转换表单）
+├── components/
+│   ├── UrlParseDialog.vue   # URL 解析弹窗
+│   ├── PrivacyNotice.vue    # 隐私声明
+│   └── SvgIcon/             # SVG 图标组件
+├── composables/
+│   ├── useSubconverter.ts   # 订阅转换逻辑（表单状态、生成 URL、导入 Clash）
+│   ├── useBackend.ts        # 后端版本检测
+│   └── useOptions.ts        # 下拉选项聚合
+├── config/
+│   ├── client-types.ts      # 客户端类型列表（Clash / Surge / QuanX / ...）
+│   ├── remote-configs.ts    # 远程配置列表
+│   └── constants.ts         # 常量
+├── services/
+│   └── backendService.ts    # 后端 API 封装
+├── utils/
+│   ├── formatters.ts        # URL 参数格式化
+│   ├── validators.ts        # 表单校验
+│   ├── storage.ts           # localStorage 封装
+│   ├── search.ts            # 搜索工具
+│   └── index.ts             # 通用工具（clipboard 等）
+├── plugins/                 # Vite 插件配置
+├── router/                  # Vue Router
+├── icons/svg/               # SVG 精灵图源文件
+└── assets/css/              # 全局样式
+```
 
-代码风格：2 空格缩进、单引号、无分号，遵循 ESLint 配置。
+## 相关项目
 
-## 📄 许可证
+- [tindy2013/subconverter](https://github.com/tindy2013/subconverter) — 订阅转换后端
+- [MetaCubeX/mihomo](https://github.com/MetaCubeX/mihomo) — Clash.Meta 内核
+- [LM-Firefly/Rules](https://github.com/LM-Firefly/Rules) — 规则集
 
-MIT License — Copyright © 2020-2025 CareyWang
+## License
 
-## 📈 项目统计
-
-<a href="https://www.star-history.com/#CareyWang/sub-web&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=CareyWang/sub-web&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=CareyWang/sub-web&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=CareyWang/sub-web&type=date&legend=top-left" />
- </picture>
-</a>
+MIT
