@@ -1,195 +1,116 @@
 # sub-web
 
-![Vue](https://img.shields.io/badge/Vue-2.7.x-brightgreen.svg)
-![Vite](https://img.shields.io/badge/Vite-8.x-646CFF.svg)
-![Node](https://img.shields.io/badge/Node-22.x-green.svg)
-![License](https://img.shields.io/badge/License-MIT-blue.svg)
-![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)
+基于 vue-cli 与 [tindy2013/subconverter](https://github.com/tindy2013/subconverter) 后端实现的配置自动生成。
 
-基于 Vue.js 2.7 与 [tindy2013/subconverter](https://github.com/tindy2013/subconverter) 后端实现的订阅配置自动生成 Web 界面。
+## Table of Contents
 
-## ✨ 特性
+- [ChangeLog](#ChangeLog)
+- [Docker](#Docker)
+- [Requirements](#Requirements)
+- [Install](#install)
+- [Usage](#usage)
+- [Related](#Related)
+- [Contributing](#contributing)
+- [License](#license)
 
-- 基于 Vue 2.7 + Element UI 的现代化界面
-- Vite 8 构建，热重载开发体验
-- 模块化架构：composables / services / utils / config 分层
-- SVG 图标精灵（vite-plugin-svg-icons）
-- 本地存储缓存，TTL 可配置
-- 短链接与配置文件上传集成
-- 一键导入 Clash
-- Docker 一键部署
+## ChangeLog
 
-## 🚀 快速开始
+- 20200730
 
-### 使用 Docker（推荐）
+  - 独立各类后端配置到 .env 文件中，现在修改后端只需要修改 .env 即可。
 
-```bash
-docker run -d \
-  -p 58080:80 \
-  --restart always \
-  --name subweb \
-  careywong/subweb:latest
+
+## Docker
+
+```shell
+docker run -d -p 58080:80 --restart always --name subweb careywong/subweb:latest
 ```
 
-访问 <http://localhost:58080/>
+若需要对代码进行修改，你需要在本地构建镜像并运行。
+注：每次修改代码，你都需要重新执行 docker build 来执行打包操作。
 
-### 本地开发
+```shell
+docker -v
+Docker version 23.0.4, build f480fb1
 
-```bash
-git clone https://github.com/CareyWang/sub-web.git
-cd sub-web
-yarn install
-yarn dev
-```
-
-访问 <http://localhost:5173/>
-
-## 📦 环境要求
-
-- **Node.js**: 22.x
-- **Yarn**: 1.22+
-- **Docker**: 20.10+（可选）
-
-## 🛠️ 常用命令
-
-| 命令 | 说明 |
-|------|------|
-| `yarn dev` | 启动开发服务器 |
-| `yarn build` | 构建生产版本 |
-| `yarn preview` | 本地预览构建产物 |
-| `yarn lint` | ESLint 代码检查 |
-
-## ⚙️ 环境配置
-
-创建 `.env` 文件（参考如下）：
-
-```env
-# Subconverter 后端地址
-VITE_SUBCONVERTER_DEFAULT_BACKEND=https://api.wcc.best
-
-# 项目与社区链接
-VITE_PROJECT=https://github.com/CareyWang/sub-web
-VITE_BOT_LINK=https://t.me/subconverter_discuss
-
-# 后端版本页
-VITE_BACKEND_RELEASE=https://github.com/tindy2013/subconverter/actions
-
-# 远程配置示例与进阶文档
-VITE_SUBCONVERTER_REMOTE_CONFIG=https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/example_external_config.ini
-VITE_SUBCONVERTER_DOC_ADVANCED=https://github.com/tindy2013/subconverter/blob/master/README-cn.md
-
-# 短链接后端
-VITE_MYURLS_API=https://suosuo.de/short
-
-# 配置文件托管后端
-VITE_CONFIG_UPLOAD_API=https://oss.wcc.best/upload
-
-# 本地存储与缓存 TTL（秒）
-VITE_USE_STORAGE=true
-VITE_CACHE_TTL=86400
-```
-
-如果部署在子路径（如 `/sub-web/`），在构建时指定 base：
-
-```bash
-yarn build --base=/sub-web/
-```
-
-或在 `vite.config.js` 中设置 `base: '/sub-web/'`。
-
-## 📁 目录结构
-
-```
-src/
-├── main.js              # 应用入口，插件注册
-├── App.vue
-├── router/              # Vue Router（history 模式）
-├── views/
-│   └── Subconverter.vue # 主页面
-├── components/          # 可复用组件（弹窗等）
-├── composables/         # 共享逻辑（表单、订阅、URL 解析）
-├── services/            # API 封装（后端版本、短链接、配置上传）
-├── config/              # 常量、客户端类型、远程配置列表
-├── utils/               # 工具函数（storage、validators、formatters）
-├── plugins/             # Vue 插件注册（Element UI、Axios 等）
-└── icons/svg/           # SVG 精灵图源文件
-```
-
-## 🐳 Docker 部署
-
-### 本地构建
-
-```bash
 docker build -t subweb-local:latest .
-
-docker run -d \
-  -p 58080:80 \
-  --restart always \
-  --name subweb \
-  subweb-local:latest
+docker run -d -p 58080:80 --restart always --name subweb subweb-local:latest
 ```
 
-### Docker Compose（含短链接服务）
+## Requirements
 
-```bash
-cd services
+你需要安装 [Node](https://nodejs.org/zh-cn/) 来安装依赖与打包发布。你可以通过以下命令查看是否安装成功。
+注：以下步骤为 Ubuntu 下相应命令，其他系统请自行修改。为了方便后来人解决问题，有问题请发 issue。
+你还需要安装 [pnpm](https://pnpm.io/installation) 作为包管理器。
 
-# 编辑 .env，配置端口和域名
-# 默认：SUBWEB_PORT=58080, MYURLS_PORT=8002, MYURLS_DOMAIN=example.com
-vim .env
+```shell
+node -v
+v20.xx.x
 
-docker-compose up -d
+pnpm -v
+9.x.x
 ```
 
-## 🌐 Nginx 配置示例
+## Install
 
-```nginx
+```shell
+pnpm install
+```
+
+## Usage
+
+```shell
+pnpm run dev
+```
+
+浏览器访问 <http://localhost:5173/>
+
+## Deploy
+
+发布到线上环境，你需要安装依赖，执行以下打包命令，生成的 dist 目录即为发布目录。如需修改默认后端，请修改 src/views/Subconverter.vue 中 **defaultBackend** 配置项。
+
+```shell
+pnpm run build
+```
+
+你需要安装 nginx (或其他 web 服务器)并正确配置。以下为示例配置，你需要修改 example.com 为自己域名并配置正确的项目根路径（https 自行配置）。
+
+```shell
 server {
     listen 80;
-    server_name your-domain.com;
+    server_name example.com;
 
-    root /var/www/sub-web/dist;
-    index index.html;
+    root /var/www/http/sub-web/dist;
+    index index.html index.htm;
 
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
+    error_page 404 /index.html;
 
-    gzip on;
-    gzip_types text/plain text/css application/javascript application/json;
-    gzip_min_length 1k;
+    gzip on; #开启gzip压缩
+    gzip_min_length 1k; #设置对数据启用压缩的最少字节数
+    gzip_buffers 4 16k;
+    gzip_http_version 1.0;
+    gzip_comp_level 6; #设置数据的压缩等级,等级为1-9，压缩比从小到大
+    gzip_types text/plain text/css text/javascript application/json application/javascript application/x-javascript application/xml; #设置需要压缩的数据格式
+    gzip_vary on;
 
-    location ~* \.(css|js|png|jpg|svg|woff2|ttf|eot)$ {
-        add_header Cache-Control "public,max-age=86400";
+    location ~* \.(css|js|png|jpg|jpeg|gif|gz|svg|mp4|ogg|ogv|webm|htc|xml|woff)$ {
+        access_log off;
+        add_header Cache-Control "public,max-age=30*24*3600";
     }
 }
 ```
 
-## 🔗 相关项目
+## Related
 
-- **[tindy2013/subconverter](https://github.com/tindy2013/subconverter)** - 订阅转换后端
-- **[CareyWang/MyUrls](https://github.com/CareyWang/MyUrls)** - 短链接服务
+- [tindy2013/subconverter](https://github.com/tindy2013/subconverter)
+- [CareyWang/MyUrls](https://github.com/CareyWang/MyUrls)
 
-## 🤝 贡献
+## Contributing
 
-1. Fork 本仓库
-2. 创建特性分支 `git checkout -b feature/AmazingFeature`
-3. 提交更改 `git commit -m 'Add some AmazingFeature'`
-4. 推送到分支 `git push origin feature/AmazingFeature`
-5. 创建 Pull Request
+PRs accepted.
 
-代码风格：2 空格缩进、单引号、无分号，遵循 ESLint 配置。
+Small note: If editing the README, please conform to the [standard-readme](https://github.com/RichardLitt/standard-readme) specification.
 
-## 📄 许可证
+## License
 
-MIT License — Copyright © 2020-2025 CareyWang
-
-## 📈 项目统计
-
-<a href="https://www.star-history.com/#CareyWang/sub-web&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=CareyWang/sub-web&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=CareyWang/sub-web&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=CareyWang/sub-web&type=date&legend=top-left" />
- </picture>
-</a>
+MIT © 2020 CareyWang
