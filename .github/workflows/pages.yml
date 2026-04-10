@@ -67,7 +67,7 @@ jobs:
           token: ${{env.GIT_TOKEN}}
       - name: Push to GithubCI
         if: ${{ github.ref == 'refs/heads/main' }}
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           github-token: ${{env.GIT_TOKEN}}
           script: |
