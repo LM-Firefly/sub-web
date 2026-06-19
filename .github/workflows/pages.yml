@@ -28,7 +28,7 @@ jobs:
         with:
           timezoneLinux: "Asia/Shanghai"
       - name: Sync commit
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Check sub-web commit
         id: web
         run: |
@@ -89,7 +89,7 @@ jobs:
 #        uses: hoang-rio/set-timezone@v1.4
 #        with:
 #          timezoneLinux: "Asia/Shanghai"
-#      - uses: actions/checkout@v6
+#      - uses: actions/checkout@v7
 #        with:
 #          fetch-depth: 0
 #          token: ${{env.GIT_TOKEN}}
@@ -148,7 +148,7 @@ jobs:
 #      - name: Insert Changelog
 #        run: |
 #          echo "${{steps.build_changelog.outputs.changelog}}" >> $GITHUB_WORKSPACE/CHANGELOG.md
-#      - uses: actions/checkout@v6
+#      - uses: actions/checkout@v7
 #        with:
 #          fetch-depth: 0
 #          token: ${{env.GIT_TOKEN}}
@@ -171,7 +171,7 @@ jobs:
 #        uses: hoang-rio/set-timezone@v1.4
 #        with:
 #          timezoneLinux: "Asia/Shanghai"
-#      - uses: actions/checkout@v6
+#      - uses: actions/checkout@v7
 #        with:
 #          fetch-depth: 0
 #          token: ${{env.GIT_TOKEN}}
@@ -195,7 +195,7 @@ jobs:
 #        uses: hoang-rio/set-timezone@v1.4
 #        with:
 #          timezoneLinux: "Asia/Shanghai"
-#      - uses: actions/checkout@v6
+#      - uses: actions/checkout@v7
 #        with:
 #          fetch-depth: 0
 #          token: ${{env.GIT_TOKEN}}
