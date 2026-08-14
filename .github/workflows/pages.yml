@@ -57,7 +57,7 @@ jobs:
           sed -i 's/cloudflare_analytics_token/50c2fe99a72d4537884ce5951738ec23/' docs/index.html
           sudo rm -rf sub-web/*
       - name: Update sub-web
-        uses: EndBug/add-and-commit@v10
+        uses: EndBug/add-and-commit@v11
         with:
           author_email: mail@example.com
           default_author: github_actions
@@ -153,7 +153,7 @@ jobs:
 #          fetch-depth: 0
 #          token: ${{env.GIT_TOKEN}}
 #      - name: Insert Changelog
-#        uses: EndBug/add-and-commit@v10
+#        uses: EndBug/add-and-commit@v11
 #        with:
 #          author_email: mail@example.com
 #          default_author: github_actions
