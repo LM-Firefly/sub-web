@@ -11,7 +11,7 @@ export function useSubconverter(defaultBackend: string) {
     appendType: false,
     clashdns: "",
     classic: false,
-    clientType: "",
+    clientType: {} as Record<string, any>,
     customBackend: "",
     emoji: true,
     excludeRemarks: "",
@@ -36,7 +36,7 @@ export function useSubconverter(defaultBackend: string) {
   });
   const customParams = ref<Array<{ name: string; value: string }>>([]);
   // Computed
-  const canMakeUrl = computed(() => !!(form.sourceSubUrl && form.clientType));
+  const canMakeUrl = computed(() => !!(form.sourceSubUrl && form.clientType?.target));
   const canInstall = computed(() => !!customSubUrl.value);
   // Watchers
   watch(() => form.classic, (val) => {

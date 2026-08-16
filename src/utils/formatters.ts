@@ -6,50 +6,56 @@ export const buildUrlParams = (
 ) => {
   const backend = form.customBackend || defaultBackend;
   const params = new URLSearchParams();
-  params.append('target', form.clientType);
+  // target / ver — clientType now stores { target, ver? }
+  const client = form.clientType || {};
+  params.append('target', client.target || '');
+  if (client.ver) {
+    params.append('ver', client.ver);
+  }
   params.append('url', form.sourceSubUrl.replace(/(\n|\r|\n\r)/g, "|"));
   if (form.remoteConfig) {
     params.append('config', form.remoteConfig);
   }
   if (advanced === '2') {
-    const advancedParams: Record<string, any> = {
-      insert: form.insert,
-      expand: !form.nodeList ? form.expand : undefined,
-      classic: form.classic && !form.nodeList && !form.expand ? true : undefined,
-      exclude: form.excludeRemarks,
-      include: form.includeRemarks,
-      filename: form.filename,
-      dev_id: form.devid,
-      ua: form.ua,
-      append_type: form.appendType,
-      tfo: form.tfo,
-      tls13: form.tls13,
-      scv: form.scv,
-      udp: form.udp,
-      xudp: form.xudp,
-      sort: form.sort,
-      emoji: form.emoji,
-      list: form.nodeList,
-      fdn: form.fdn,
-      new_name: form.clientType === 'clash' && form.new_name ? true : undefined,
-    };
-    const booleanFalseExcludes = ['append_type', 'insert', 'tfo', 'tls13', 'scv', 'udp', 'xudp', 'sort', 'emoji', 'list', 'fdn', 'new_name'];
-    Object.entries(advancedParams).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        if (typeof value === 'boolean') {
-          if (value === false && booleanFalseExcludes.includes(key)) {
-            return;
-          }
-          params.append(key, value ? 'true' : 'false');
-        } else if (value) {
-          params.append(key, value);
-        }
-      }
+    // mapping: [frontendKey, paramKey]
+    const simpleFields: Array<[string, string]> = [
+      ['excludeRemarks', 'exclude'],
+      ['includeRemarks', 'include'],
+      ['filename', 'filename'],
+      ['devid', 'dev_id'],
+      ['ua', 'ua'],
+    ];
+    simpleFields.forEach(([fk, pk]) => {
+      const val = form[fk];
+      if (val) params.append(pk, val);
     });
-    if (form.clientType === 'clash' && form.clashdns) {
+    // boolean fields — always send true/false so backend tribool can be overridden
+    const booleanFields: Array<[string, string]> = [
+      ['insert', 'insert'],
+      ['expand', 'expand'],
+      ['classic', 'classic'],
+      ['appendType', 'append_type'],
+      ['tfo', 'tfo'],
+      ['tls13', 'tls13'],
+      ['scv', 'scv'],
+      ['udp', 'udp'],
+      ['xudp', 'xudp'],
+      ['sort', 'sort'],
+      ['emoji', 'emoji'],
+      ['nodeList', 'list'],
+      ['fdn', 'fdn'],
+    ];
+    booleanFields.forEach(([fk, pk]) => {
+      params.append(pk, form[fk] ? 'true' : 'false');
+    });
+    // clash-specific: new_name only when target is clash
+    if (client.target === 'clash') {
+      params.append('new_name', form.new_name ? 'true' : 'false');
+    }
+    if (client.target === 'clash' && form.clashdns) {
       params.append('clash.dns', form.clashdns);
     }
-    if (form.agekey) {
+    if (form.agekey && client.target === 'clash') {
       params.append('agekey', form.agekey);
     }
     customParams.forEach(({ name, value }) => {

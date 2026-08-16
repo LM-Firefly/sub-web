@@ -9,7 +9,11 @@ export const parseConfigParams = (
   };
   const formUpdates: Record<string, any> = {};
   const target = getParam("target");
-  formUpdates.clientType = target === "surge" ? target + "&ver=" + (getParam("ver") || "4") : target || "";
+  const ver = getParam("ver");
+  // Build clientType as { target, ver? } to match clientTypes entries
+  // Normalize legacy Surge ver 2/3 to 4
+  const normalizedVer = ver && target === 'surge' && parseInt(ver) < 4 ? '4' : ver;
+  formUpdates.clientType = target ? { target, ...(normalizedVer ? { ver: normalizedVer } : {}) } : {};
   formUpdates.customBackend = url.origin + url.pathname + "?";
   const paramMappings: Record<string, { key: string; processor?: (v: string) => any }> = {
     url: { key: 'sourceSubUrl', processor: v => decodeURIComponent(v).replace(/\|/g, "\n") },
@@ -34,7 +38,7 @@ export const parseConfigParams = (
     new_name: { key: 'new_name' },
     fdn: { key: 'fdn' },
     expand: { key: 'expand' },
-    classic: { key: 'classic' }
+    classic: { key: 'classic' },
   };
   Object.entries(paramMappings).forEach(([param, { key, processor }]) => {
     const value = getParam(param);
@@ -42,18 +46,15 @@ export const parseConfigParams = (
       if (processor) {
         formUpdates[key] = processor(value);
       } else {
-        if (value === 'true') formUpdates[key] = true;
-        else if (value === 'false') formUpdates[key] = false;
-        else if (value === '1') {
-           formUpdates[key] = true;
-        } else {
-           formUpdates[key] = value;
-        }
+        // Treat 'true'/'1' as true, 'false'/'0' as false, rest as string
+        if (value === 'true' || value === '1') formUpdates[key] = true;
+        else if (value === 'false' || value === '0') formUpdates[key] = false;
+        else formUpdates[key] = value;
       }
     }
   });
   const customParams = Array.from(params.entries())
-    .filter(([key]) => !excludeParams.has(key) && key !== 'append_type' && key !== 'list')
+    .filter(([key]) => !excludeParams.has(key))
     .map(([name, value]) => ({ name, value }));
   return { formUpdates, customParams };
 };

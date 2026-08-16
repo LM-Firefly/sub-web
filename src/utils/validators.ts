@@ -25,8 +25,8 @@ export const validateSubUrl = (url: string) => {
  * @param {Object} form - 表单数据
  * @returns {boolean} 验证结果
  */
-export const validateRequiredFields = (form: { sourceSubUrl: string; clientType: string }) => {
-  if (!form.sourceSubUrl || !form.clientType) {
+export const validateRequiredFields = (form: { sourceSubUrl: string; clientType: Record<string, any> }) => {
+  if (!form.sourceSubUrl || !form.clientType?.target) {
     return { valid: false, message: "订阅链接与客户端为必填项" };
   }
   const subUrlValidation = validateSubUrl(form.sourceSubUrl);

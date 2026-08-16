@@ -23,8 +23,8 @@
                   placeholder="支持各种订阅链接或单节点链接, 多个链接每行一个或用 | 分隔" @blur="saveSubUrl" />
               </el-form-item>
               <el-form-item label="客户端项:">
-                <el-select v-model="form.clientType" style="width: 100%">
-                  <el-option v-for="(v, k) in options.clientTypes" :key="k" :label="k" :value="v" />
+                <el-select v-model="clientTypeKey" style="width: 100%">
+                  <el-option v-for="(v, k) in options.clientTypes" :key="k" :label="k" :value="k" />
                 </el-select>
               </el-form-item>
               <el-form-item label="远程配置:">
@@ -62,16 +62,16 @@
                 <el-form-item label="输出文件名:">
                   <el-input v-model="form.filename" style="width: 100%" placeholder="返回的订阅文件名" />
                 </el-form-item>
-                <el-form-item label="Clash.TUN:" v-if="form.clientType === 'clash'">
+                <el-form-item label="Clash.TUN:" v-if="form.clientType?.target === 'clash'">
                   <el-select v-model="form.clashdns" style="width: 100%" allow-create filterable
                     placeholder="默认不开启TUN/TAP">
                     <el-option v-for="(v, k) in options.clashdns" :key="k" :label="k" :value="v"></el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="agekey:" v-if="form.clientType === 'clash'">
+                <el-form-item label="agekey:" v-if="form.clientType?.target === 'clash'">
                   <el-input v-model="form.agekey" style="width: 100%" placeholder="AGE-SECRET-KEY-1... 或 AGE-SECRET-KEY-PQ-1..., 用于解密 age 加密的订阅" @blur="validateAgekey" />
                 </el-form-item>
-                <el-form-item label="远程设备:" v-if="form.clientType === 'quanx'">
+                <el-form-item label="远程设备:" v-if="form.clientType?.target === 'quanx'">
                   <el-input v-model="form.devid" placeholder="用于设置QuantumultX的远程设备ID" />
                 </el-form-item>
                 <el-form-item label="自定义UA:">
@@ -231,6 +231,7 @@ const {
 const { backendVersion, fetchBackendVersion } = useBackend();
 
 // UI State
+const clientTypeKey = ref("Clash");
 const globalOptionsVisible = ref(false);
 const nodeOptionsVisible = ref(false);
 const ruleVisible = ref(false);
@@ -246,6 +247,19 @@ const gotoRemoteConfig = () => window.open(remoteConfigSample);
 const onConfigLoaded = ({ formUpdates, customParams: newCustomParams }: any) => {
   Object.assign(form, formUpdates);
   customParams.value = newCustomParams;
+  // Sync clientTypeKey from parsed clientType object
+  if (formUpdates.clientType?.target) {
+    const matchKey = Object.keys(options.clientTypes).find(
+      k => options.clientTypes[k].target === formUpdates.clientType.target
+        && (options.clientTypes[k].ver || '') === (formUpdates.clientType.ver || '')
+    );
+    if (matchKey) clientTypeKey.value = matchKey;
+  }
+  // Auto-switch to advanced mode if URL contained advanced params
+  const advancedKeys = ['expand', 'classic', 'excludeRemarks', 'includeRemarks', 'filename', 'appendType', 'tfo', 'tls13', 'scv', 'udp', 'xudp', 'sort', 'emoji', 'nodeList', 'fdn', 'new_name', 'clashdns', 'agekey'];
+  if (advancedKeys.some(k => k in formUpdates)) {
+    advanced.value = '2';
+  }
 };
 
 const validateAgekey = () => {
@@ -257,10 +271,13 @@ const validateAgekey = () => {
 };
 
 // Logic
+watch(clientTypeKey, (key) => {
+  form.clientType = options.clientTypes[key] || {};
+});
 watch(() => form.customBackend, () => {
   fetchBackendVersion(form.customBackend);
 });
-watch(() => form.clientType, (val) => {
+watch(() => form.clientType?.target, (val) => {
   if (val !== 'clash') form.agekey = '';
 });
 
@@ -270,8 +287,10 @@ onMounted(() => {
     form.sourceSubUrl = getLocalStorageItem("sourceSubUrl");
   }
 
-  // Set defaults
-  Object.assign(form, { clientType: "clash", customBackend: defaultBackend, remoteConfig: "", clashdns: "", agekey: "" });
+  // Set defaults using actual clientTypes reference so el-select can match
+  clientTypeKey.value = "Clash";
+  form.clientType = options.clientTypes["Clash"];
+  Object.assign(form, { customBackend: defaultBackend, remoteConfig: "", clashdns: "", agekey: "" });
 
   fetchBackendVersion(defaultBackend);
 });
