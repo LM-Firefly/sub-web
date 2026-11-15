@@ -1,297 +1,203 @@
-# sub-web
+# Firefly-SubConverter
 
-![Vue](https://img.shields.io/badge/Vue-3.x-brightgreen.svg)
+![Vue](https://img.shields.io/badge/Vue-3.5.x-brightgreen.svg)
 ![Vite](https://img.shields.io/badge/Vite-8.x-646CFF.svg)
 ![Node](https://img.shields.io/badge/Node-24.x-green.svg)
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 ![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)
 
-基于 Vue 3 + Element Plus 与 [tindy2013/subconverter](https://github.com/tindy2013/subconverter) 后端实现的订阅配置自动生成 Web 界面。
+基于 [Vite 8](https://vite.dev/) + [Vue 3](https://vuejs.org/) 构建的订阅转换前端，配合 [subconverter](https://github.com/LM-Firefly/subconverter) 后端使用，支持 Clash(mihomo) / Surge / QuantumultX / Singbox / Loon 等多种客户端。
 
-## ✨ 特性
+订阅链接的拼装完全在浏览器端完成，页面本身不存储任何订阅数据。
 
-- 基于 Vue 3 + Element Plus 的现代化界面
-- Vite 8 构建，热重载开发体验
-- 模块化架构：composables / services / utils / config 分层
-- SVG 图标精灵（vite-plugin-svg-icons）
-- 本地存储缓存，TTL 可配置
-- 短链接与配置文件上传集成
-- 一键导入 Clash
-- Docker 一键部署，支持运行时环境变量
+## 目录
 
-## 🚀 快速开始
+- [功能特性](#功能特性)
+- [技术栈](#技术栈)
+- [环境要求](#环境要求)
+- [快速开始](#快速开始)
+- [常用命令](#常用命令)
+- [环境配置](#环境配置)
+- [Docker 部署](#docker-部署)
+- [Nginx 部署](#nginx-部署)
+- [Cloudflare Pages 部署](#cloudflare-pages-部署)
+- [目录结构](#目录结构)
+- [参与开发](#参与开发)
+- [相关项目](#相关项目)
+- [License](#license)
 
-### 使用 Docker（推荐）
+## 功能特性
+
+- 基础 / 进阶两种模式：进阶模式提供节点筛选、规则、输出文件名、UA、自定义参数等完整转换选项
+- 多客户端目标：Clash / Surge(4/5/6) / Quantumult(X) / Singbox / Loon / Surfboard / Shadowsocks 系 / V2Ray / Trojan / 混合订阅 / 自动判断
+- 远程配置：内置 LM-Firefly、ACL4SSR 等配置分组，也可手动粘贴任意配置地址
+- 链接导入：粘贴已有定制订阅链接即可还原表单与自定义参数
+- 三态选项（默认 / 开 / 关）：未指定的开关不会拼进链接，由后端默认值决定
+- 一键复制定制订阅，一键拉起 Clash 安装
+- 后端版本检测、源订阅本地缓存（TTL 可配）、PWA 离线缓存与自动更新
+
+## 技术栈
+
+| 类别 | 技术 |
+|------|------|
+| 框架 | Vue 3.5（Composition API，`<script setup lang="ts">`） |
+| 构建 | Vite 8 |
+| 语言 | TypeScript |
+| UI | Element Plus 2（unplugin 自动按需引入） |
+| HTTP | Axios |
+| 路由 | Vue Router 5 |
+| PWA | vite-plugin-pwa + Workbox |
+
+## 环境要求
+
+- **Node.js**: >= 24
+- **pnpm**: 9+（`build.cmd` 与 CI 均使用 pnpm 10）
+
+## 快速开始
 
 ```bash
-docker run -d \
-  -p 58080:80 \
-  --restart always \
-  --name subweb \
-  -e VITE_SUBCONVERTER_DEFAULT_BACKEND=https://your-subconverter.example.com \
-  careywong/subweb:latest
-```
-
-访问 <http://localhost:58080/>
-
-> 该镜像只包含 sub-web 前端静态文件，不包含 subconverter 后端。生成订阅链接前需要另行部署 subconverter，并在页面“后端地址”中填写，或通过 `VITE_SUBCONVERTER_DEFAULT_BACKEND` 指定默认地址。
-
-### 本地开发
-
-```bash
-git clone https://github.com/CareyWang/sub-web.git
+git clone https://github.com/LM-Firefly/sub-web.git
 cd sub-web
-yarn install
-yarn dev
+pnpm install
+pnpm dev
 ```
 
-访问 <http://localhost:5173/>
+访问 <http://localhost:5173/>。Windows 下也可直接运行 `build.cmd` 一键完成安装与构建。
 
-## 📦 环境要求
-
-- **Node.js**: 24.x
-- **Yarn**: 1.22+
-- **Docker**: 20.10+（可选）
-
-## 🛠️ 常用命令
+## 常用命令
 
 | 命令 | 说明 |
 |------|------|
-| `yarn dev` | 启动开发服务器 |
-| `yarn build` | 构建生产版本 |
-| `yarn preview` | 本地预览构建产物 |
-| `yarn lint` | ESLint 代码检查 |
-| `node --test tests/subscription-workflows.test.mjs` | 运行订阅工作流回归测试 |
+| `pnpm dev` | 启动开发服务器 |
+| `pnpm build` | 构建生产版本（输出 `dist/`） |
+| `pnpm preview` | 本地预览构建产物 |
 
-## ⚙️ 环境配置
+## 环境配置
 
-创建 `.env` 文件（参考如下）：
-
-```env
-# Subconverter 后端地址（可写裸域名、/sub 或 /sub?）
-VITE_SUBCONVERTER_DEFAULT_BACKEND=https://api.wcc.best
-
-# 项目与社区链接
-VITE_PROJECT=https://github.com/CareyWang/sub-web
-VITE_BOT_LINK=https://t.me/subconverter_discuss
-
-# 后端版本页
-VITE_BACKEND_RELEASE=https://github.com/tindy2013/subconverter/actions
-
-# 远程配置示例与进阶文档
-VITE_SUBCONVERTER_REMOTE_CONFIG=https://raw.githubusercontent.com/tindy2013/subconverter/master/base/config/example_external_config.ini
-VITE_SUBCONVERTER_DOC_ADVANCED=https://github.com/tindy2013/subconverter/blob/master/README-cn.md
-
-# 短链接后端
-VITE_MYURLS_API=https://suosuo.de/short
-
-# 配置文件托管后端
-VITE_CONFIG_UPLOAD_API=https://oss.wcc.best/upload
-
-# 本地存储与缓存 TTL（秒）
-VITE_USE_STORAGE=true
-VITE_CACHE_TTL=86400
-```
-
-### 构建时配置
-
-`.env` 中的 `VITE_*` 会在 `yarn build` 时写入静态文件。修改 `.env` 后需要重新构建；运行中的容器不会读取 `.env`。
-
-### Docker 运行时配置
-
-Docker 镜像会在容器启动时根据环境变量生成 `/usr/share/nginx/html/config.js`，因此可以直接用 `-e` 覆盖配置，无需重新构建镜像：
-
-```bash
-docker run -d \
-  -p 58080:80 \
-  --restart always \
-  --name subweb \
-  -e VITE_SUBCONVERTER_DEFAULT_BACKEND=https://sub.example.com \
-  -e VITE_MYURLS_API=https://short.example.com/short \
-  -e VITE_CONFIG_UPLOAD_API=https://config.example.com/upload \
-  careywong/subweb:latest
-```
-
-支持运行时覆盖的变量：
+构建期变量统一使用 `VITE_` 前缀，模板见 [.env](.env)。修改后需重新构建才生效：
 
 | 变量 | 说明 |
 |------|------|
-| `VITE_SUBCONVERTER_DEFAULT_BACKEND` | 默认 subconverter 地址，可写裸域名、`/sub` 或 `/sub?` |
-| `VITE_MYURLS_API` | 短链接接口 |
-| `VITE_CONFIG_UPLOAD_API` | 配置上传接口 |
-| `VITE_PROJECT` | 项目链接 |
-| `VITE_BOT_LINK` | 社区链接 |
-| `VITE_BACKEND_RELEASE` | 后端版本页 |
-| `VITE_SUBCONVERTER_REMOTE_CONFIG` | 远程配置示例 |
-| `VITE_SUBCONVERTER_DOC_ADVANCED` | 进阶文档 |
-| `VITE_USE_STORAGE` | 是否启用本地缓存（`true` / `false`） |
-| `VITE_CACHE_TTL` | 缓存 TTL（秒） |
+| `VITE_SUBCONVERTER_DEFAULT_BACKEND` | 默认转换后端地址（页面会自动追加 `/sub?`） |
+| `VITE_SUBCONVERTER_REMOTE_CONFIG` | 「远程配置示例」跳转链接 |
+| `VITE_SUBCONVERTER_DOC_ADVANCED` | 进阶参数文档链接 |
+| `VITE_PROJECT` | 页头 GitHub 图标跳转链接 |
+| `VITE_BACKEND` | 后端项目仓库链接 |
+| `VITE_RULESET_LINK` | 规则集仓库链接 |
+| `VITE_BOT_LINK` | Telegram 图标跳转链接 |
+| `VITE_USE_STORAGE` | 设为 `true` 时在本地记住源订阅地址 |
+| `VITE_CACHE_TTL` | 本地缓存有效期（秒，默认 `3600`） |
 
-未设置或为空的变量会回退到构建时 `.env` 的值。
+> `.env` 中注释掉的 `VITE_MYURLS_API`、`VITE_CONFIG_UPLOAD_API` 为历史遗留项，当前版本不读取。
 
-### 子路径部署
-
-如果部署在子路径（如 `/sub-web/`），在构建时指定 base：
+## Docker 部署
 
 ```bash
-yarn build --base=/sub-web/
+docker build -t subweb .
+docker run -d -p 58080:80 --restart always --name subweb subweb
 ```
 
-或在 `vite.config.js` 中设置 `base: '/sub-web/'`。
+多阶段构建：Node 24 Alpine 编译 + Nginx 1.24 Alpine 托管静态文件。环境变量在构建期注入（构建前改好 `.env` 即可）；镜像内只包含前端，subconverter 后端需另行部署。
 
-`BASE_URL` 是 Vite 的内置变量，不是可以在 `.env` 中覆盖的配置项；子路径必须通过 `base` 设置。
+> 注意：Dockerfile 的构建阶段执行 `pnpm install --frozen-lockfile`，但仓库不提交 `pnpm-lock.yaml`（见 `.gitignore`），干净环境下 `docker build` 会因缺少锁文件失败。可先本地执行 `pnpm install` 生成锁文件，并把 `COPY package*.json ./` 改为同时拷贝 `pnpm-lock.yaml`，或去掉 `--frozen-lockfile`。
 
-Docker 构建同样支持：
+## Nginx 部署
 
-```bash
-docker build --build-arg BASE_PATH=/sub-web/ -t subweb-local:latest .
-```
-
-使用子路径时，反向代理需要把 `/sub-web/` 前缀转发到容器根路径，或为静态目录配置对应的 `alias`。
-
-### 自定义远程配置
-
-编辑 `src/config/remote-configs.js`，在对应分组中添加 `{ label, value }`，然后重新构建；也可以在页面“远程配置”下拉框中直接输入配置 URL。默认模板来自该文件中的 `REMOTE_CONFIGS`，不是 `.env` 中的示例配置。
-
-### 配置上传服务
-
-`VITE_CONFIG_UPLOAD_API` 指向外部配置托管服务。仓库的 `services/` 只包含短链接服务（myurls + redis），不包含配置上传服务。自建时把该变量替换为你的上传接口，接口需返回：
-
-```json
-{ "code": 0, "data": { "url": "https://config.example.com/result" }, "msg": "" }
-```
-
-## 📁 目录结构
-
-```
-src/
-├── main.js              # 应用入口，插件注册
-├── App.vue
-├── router/              # Vue Router（history 模式）
-├── views/
-│   └── Subconverter.vue # 主页面
-├── components/          # 可复用组件（弹窗等）
-├── composables/         # 共享逻辑（表单、订阅、URL 解析）
-├── services/            # API 封装（后端版本、短链接、配置上传）
-├── config/              # 常量、客户端类型、远程配置列表
-├── utils/               # 工具函数（storage、validators、formatters）
-├── plugins/             # Vue 插件注册（Element Plus、Axios 等）
-└── icons/svg/           # SVG 精灵图源文件
-docker/                  # 容器启动脚本（运行时配置生成）
-public/                  # 静态资源与 config.js 占位文件
-tests/                   # 订阅工作流回归测试
-```
-
-## 🐳 Docker 部署
-
-### 本地构建
-
-```bash
-docker build -t subweb-local:latest .
-
-docker run -d \
-  -p 58080:80 \
-  --restart always \
-  --name subweb \
-  -e VITE_SUBCONVERTER_DEFAULT_BACKEND=https://your-subconverter.example.com \
-  subweb-local:latest
-```
-
-### Docker Compose（含短链接服务）
-
-```bash
-cd services
-
-# 编辑 .env，配置端口、域名和运行时变量
-# 默认：SUBWEB_PORT=58080, MYURLS_PORT=8002, MYURLS_DOMAIN=example.com
-vim .env
-
-docker-compose up -d
-```
-
-在 `services/.env` 中添加 `VITE_*` 变量后，这些变量会传入 subweb 容器，覆盖镜像内的默认配置。
-
-## 🌐 Nginx 配置示例
+构建后将 `dist/` 目录部署到 Nginx：
 
 ```nginx
 server {
     listen 80;
-    server_name your-domain.com;
+    server_name example.com;
 
     root /var/www/sub-web/dist;
     index index.html;
 
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
-
-    location = /config.js {
-        add_header Cache-Control "no-store";
-    }
+    error_page 404 /index.html;
 
     gzip on;
-    gzip_types text/plain text/css application/javascript application/json;
     gzip_min_length 1k;
+    gzip_types text/plain text/css text/javascript application/json application/javascript application/xml;
 
-    location ~* \.(css|js|png|jpg|svg|woff2|ttf|eot)$ {
-        add_header Cache-Control "public,max-age=86400";
+    location ~* \.(css|js|png|jpg|jpeg|gif|svg|mp4|ogg|webm|woff)$ {
+        access_log off;
+        add_header Cache-Control "public,max-age=30*24*3600";
     }
 }
 ```
 
-## ☁️ Netlify 部署
+部署在子路径（如 `/sub-web/`）时通过 `VITE_BASE` 指定：
 
-在 Netlify 中导入仓库后使用以下设置：
+```bash
+VITE_BASE=/sub-web/ pnpm build
+```
 
-- **Build command**: `yarn build`
-- **Publish directory**: `dist`
-- **Node version**: `24`
+## Cloudflare Pages 部署
 
-如果需要子路径部署，在 `netlify.toml` 中设置 `build.command = "yarn build --base=/子路径/"`，并确保发布目录与 base 匹配。
+推送到 `main` 分支后由 GitHub Actions 完成：
 
-## ❓ 常见问题
+- `pages.yml` 以 `VITE_BASE=/sub-web/` 构建，将产物提交到 `docs/`，并替换 Cloudflare Web Analytics 的占位 token —— Cloudflare Pages 直接托管该目录（`public/_redirects` 提供 SPA 回退）
+- `build.yml` 上传 `dist/` 构建产物，并联动 [LM-Firefly/subconverter](https://github.com/LM-Firefly/subconverter) 仓库更新子模块
 
-### Docker 生成的订阅链接返回 404
+`docs/` 是 CI 生成并提交的构建产物，不要手工修改。
 
-页面中的“后端地址”应填写 subconverter 服务地址，例如 `http://<host>:25500/sub?`。不要填写 sub-web 自己的地址（如 `http://127.0.0.1:58080/sub?`）——该容器只托管前端静态文件，没有 `/sub` 转换接口。
+## 目录结构
 
-### `docker run -e` 设置的环境变量不生效
+```
+├── index.html                    # 入口 HTML
+├── vite.config.ts                # 构建配置（VITE_BASE、分包、@ 别名）
+├── build.cmd                     # Windows 一键安装并构建
+├── Dockerfile                    # 多阶段镜像（node:24-alpine → nginx:1.24-alpine）
+├── .env                          # 构建期环境变量
+├── CONTEXT.md                    # 领域词汇说明
+├── src/
+│   ├── main.ts                   # 应用入口
+│   ├── App.vue                   # 根组件（Element Plus 中文语言包）
+│   ├── registerServiceWorker.ts  # PWA 注册与更新提示
+│   ├── views/
+│   │   └── Subconverter.vue      # 主页面（唯一路由）
+│   ├── components/
+│   │   ├── PrivacyNotice.vue     # 隐私提示（自动消失）
+│   │   ├── TriStateCheckbox.vue  # 三态选项控件
+│   │   ├── UrlParseDialog.vue    # 链接导入弹窗
+│   │   └── SvgIcon/index.vue     # 内联 SVG 图标组件
+│   ├── composables/
+│   │   ├── useSubconverter.ts    # 表单状态、生成链接、导入还原、安装
+│   │   ├── useBackend.ts         # 后端版本检测
+│   │   └── useOptions.ts         # 客户端 / 远程配置 / 后端下拉选项
+│   ├── config/
+│   │   ├── constants.ts          # 后端预设、Clash DNS 选项
+│   │   ├── client-types.ts       # 客户端类型映射
+│   │   └── remote-configs.ts     # 远程配置分组
+│   ├── services/
+│   │   └── backendService.ts     # 后端版本查询、配置地址解析
+│   ├── utils/
+│   │   ├── formatters.ts         # URL 参数拼装（TriState 定义）
+│   │   ├── search.ts             # 订阅链接解析（导入还原）
+│   │   ├── validators.ts         # 表单校验
+│   │   ├── storage.ts            # TTL 本地存储
+│   │   └── index.ts              # 剪贴板复制
+│   ├── plugins/                  # 组件注册与 Vite 插件
+│   ├── icons/svg/                # SVG 图标源文件
+│   └── assets/css/               # 全局样式
+├── public/
+│   ├── favicons/                 # 站点图标与 manifest
+│   ├── _redirects                # SPA 回退规则
+│   └── robots.txt
+└── docs/                         # CI 提交的构建产物（Cloudflare Pages 托管）
+```
 
-确认镜像包含运行时配置脚本（当前镜像会在启动时生成 `config.js`），并使用 `VITE_` 前缀的变量名。旧镜像只在构建时读取 `.env`，需要重新构建。浏览器缓存了旧的 `config.js` 时，强制刷新页面。
+## 参与开发
 
-### 部署到子路径后白屏或资源 404
+工程约定见 [AGENTS.md](AGENTS.md)，领域词汇见 [CONTEXT.md](CONTEXT.md)。
 
-使用 `yarn build --base=/子路径/` 构建，并让 Web 服务器把该前缀映射到 `dist` 目录；Nginx 还需要 `try_files $uri $uri/ /index.html` 支持 history 路由。
+## 相关项目
 
-### Node 版本不兼容
+- [tindy2013/subconverter](https://github.com/tindy2013/subconverter) — 订阅转换后端
+- [LM-Firefly/Firefly-sub](https://github.com/LM-Firefly/Firefly-sub) — 后端部署项目
+- [MetaCubeX/mihomo](https://github.com/MetaCubeX/mihomo) — Clash.Meta 内核
+- [LM-Firefly/Rules](https://github.com/LM-Firefly/Rules) — 规则集
 
-项目要求 Node.js 24.x。使用 `node -v` 确认版本，或在 CI/本地通过 `.nvmrc`、`nvm use 24` 切换。
+## License
 
-## 🔗 相关项目
-
-- **[tindy2013/subconverter](https://github.com/tindy2013/subconverter)** - 订阅转换后端
-- **[CareyWang/MyUrls](https://github.com/CareyWang/MyUrls)** - 短链接服务
-
-## 🤝 贡献
-
-1. Fork 本仓库
-2. 创建特性分支 `git checkout -b feature/AmazingFeature`
-3. 提交更改 `git commit -m 'Add some AmazingFeature'`
-4. 推送到分支 `git push origin feature/AmazingFeature`
-5. 创建 Pull Request
-
-代码风格：2 空格缩进、单引号、无分号，遵循 ESLint 配置。
-
-## 📄 许可证
-
-MIT License — Copyright © 2020-2025 CareyWang
-
-## 📈 项目统计
-
-<a href="https://star-history.dera.page/#CareyWang/sub-web&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://star-history.dera.page/svg?repos=CareyWang/sub-web&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://star-history.dera.page/svg?repos=CareyWang/sub-web&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://star-history.dera.page/svg?repos=CareyWang/sub-web&type=date&legend=top-left" />
- </picture>
-</a>
+MIT
